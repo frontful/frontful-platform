@@ -1,6 +1,6 @@
 {
   "name": "frontful-environment",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "private": true,
   "description": "Environment abstraction provider for efficient and sustainable Javascript application development",
   "license": "MIT",
@@ -35,7 +35,6 @@
     "find-yarn-workspace-root": "^1.2.1",
     "frontful-common": "3.x",
     "frontful-config": "3.x",
-    "frontful-utils": "3.x",
     "json-loader": "^0.5.4",
     "memory-fs": "^0.4.1",
     "mime": "^2.0.3",

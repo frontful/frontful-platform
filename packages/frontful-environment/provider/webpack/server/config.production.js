@@ -50,6 +50,14 @@ module.exports = function provider(options) {
       publicPath: '/assets/',
       libraryTarget: 'commonjs-module',
       // devtoolModuleFilenameTemplate: `${cwd}/[resource-path]`,
+      devtoolModuleFilenameTemplate: (info) => {
+        if (info.absoluteResourcePath.includes(cwd)) {
+          return `${info.absoluteResourcePath}`
+        }
+        else {
+          return `frontful:${info.absoluteResourcePath}`
+        }
+      },
     },
     plugins: [
       new webpack.BannerPlugin({

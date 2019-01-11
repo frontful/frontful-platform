@@ -1,4 +1,4 @@
-import {isBrowser} from 'frontful-utils'
+import isBrowser from './utils/isBrowser'
 
 export default {
   get bundle() {

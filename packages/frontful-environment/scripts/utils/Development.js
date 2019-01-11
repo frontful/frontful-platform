@@ -4,13 +4,13 @@ const bundle = require('../../utils/bundle')
 const chalk = require('chalk')
 const commonConfig = require('frontful-common/config')
 const config = require('../../config')
+const deferred = require('../../utils/deferred')
 const errorParser = require('../../utils/errorParser')
 const fs = require('fs')
 const path = require('path')
 const printStats = require('../../utils/printStats')
 const requireFile = require('../../utils/requireFile')
 const server = require('../../utils/server')
-const {deferred} = require('frontful-utils')
 
 process.env.PORT = config.server.port
 
