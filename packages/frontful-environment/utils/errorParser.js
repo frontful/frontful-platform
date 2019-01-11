@@ -5,7 +5,6 @@ module.exports = function errorParser(e) {
   let result = [], where, what, how
 
   try {
-    console.log(e.stack)
     const stack = e.stack
       .replace(/^.*\n/i, '')
       .replace(RegExp(process.cwd().replace(/\\/gi, '\\\\'), 'gi'), '.')
