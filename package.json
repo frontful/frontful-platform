@@ -8,8 +8,8 @@
     "build": "babel-preset-frontful build ./packages",
     "clean": "node ./scripts/clean.js",
     "deploy": "babel-preset-frontful deploy ./packages",
-    "link:all": "node ./scripts/link:all.js",
-    "unlink:all": "node ./scripts/unlink:all.js",
+    "link:all": "node ./scripts/link.all.js",
+    "unlink:all": "node ./scripts/unlink.all.js",
     "test": "yarn test:eslint",
     "test:eslint": "eslint --max-warnings 0 ."
   },
