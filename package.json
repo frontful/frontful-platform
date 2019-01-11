@@ -3,7 +3,7 @@
   "version": "3.1.0",
   "private": true,
   "description": "Frontful platform",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "babel-preset-frontful build ./packages",
     "clean": "node ./scripts/clean.js",
