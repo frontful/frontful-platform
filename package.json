@@ -1,0 +1,34 @@
+{
+  "name": "frontful-platform",
+  "version": "3.1.0",
+  "private": true,
+  "description": "Frontful platform",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "babel-preset-frontful build ./packages",
+    "clean": "node ./scripts/clean.js",
+    "deploy": "babel-preset-frontful deploy ./packages",
+    "link:all": "node ./scripts/link:all.js",
+    "unlink:all": "node ./scripts/unlink:all.js",
+    "test": "yarn test:eslint",
+    "test:eslint": "eslint --max-warnings 0 ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-platform.git"
+  },
+  "contributors": [
+    "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "babel-preset-frontful": "3.x",
+    "eslint-config-frontful": "3.x",
+    "mobx": "^4.x",
+    "react": "^16.x",
+    "react-dom": "16.x",
+    "rimraf": "^2.6.2"
+  }
+}

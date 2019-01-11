@@ -1,0 +1,33 @@
+{
+  "name": "frontful-model",
+  "version": "3.1.1",
+  "private": true,
+  "description": "Model provider for component based application with focus on (de)serialization and reactivity",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-model.git"
+  },
+  "main": "./model/index.js",
+  "scripts": {
+    "build": "yarn test && babel-preset-frontful build",
+    "deploy": "yarn test && babel-preset-frontful deploy",
+    "test": "yarn test:eslint",
+    "test:eslint": "eslint --max-warnings 0 ."
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "deep-extend": "^0.6.0",
+    "frontful-utils": "3.x"
+  },
+  "peerDependencies": {
+    "mobx": "4.x"
+  },
+  "devDependencies": {
+    "babel-preset-frontful": "3.x",
+    "eslint-config-frontful": "3.x",
+    "mobx": "4.x"
+  }
+}

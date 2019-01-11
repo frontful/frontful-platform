@@ -1,0 +1,6 @@
+.DS_Store
+.npmrc
+/packages/*/build
+node_modules
+npm-debug.log
+yarn-error.log

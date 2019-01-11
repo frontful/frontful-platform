@@ -1,0 +1,5 @@
+{
+  "presets": [
+    "./index.js"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "frontful-config",
+  "version": "3.1.1",
+  "private": true,
+  "description": "Configuration provider for isomorphic applications, packages and Frontful infrastructure",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-config.git"
+  },
+  "main": "./initialize/index.js",
+  "scripts": {
+    "build": "yarn test && babel-preset-frontful build",
+    "deploy": "yarn test && babel-preset-frontful deploy",
+    "test": "yarn test:eslint",
+    "test:eslint": "eslint --max-warnings 0 ."
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "deep-extend": "^0.6.0",
+    "js-yaml": "^3.8.3",
+    "object-path": "^0.11.4",
+    "require-from-string": "^2.0.2"
+  },
+  "devDependencies": {
+    "babel-preset-frontful": "3.x",
+    "eslint-config-frontful": "3.x"
+  }
+}
