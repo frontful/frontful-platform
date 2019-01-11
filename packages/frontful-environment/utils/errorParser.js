@@ -5,12 +5,14 @@ module.exports = function errorParser(e) {
   let result = [], where, what, how
 
   try {
+    console.log(e.stack)
     const stack = e.stack
       .replace(/^.*\n/i, '')
-      .replace(RegExp(process.cwd() + '/', 'gi'), './')
-      .replace(/\(.+webpack:[\\/]/gi, '(./')
+      .replace(RegExp(process.cwd().replace(/\\/gi, '\\\\'), 'gi'), '.')
+      .replace(/\.[\\/]build[\\/]server[\\/]frontful:/gi, '')
+      .replace(/\(.+webpack:\//gi, '(./')
       .replace(/.*__webpack_require__.*\n/ig, '')
-      .replace(/.*\(build[\\/].*\n/ig, '')
+      .replace(/.*\(build\/.*\n/ig, '')
       .match(/\(.*\)/gi).map((item) => {
         return item.substr(1, item.length - 2)
           .replace(/:(\d+:\d+)/gi, ' ($1)')
