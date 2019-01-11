@@ -34,7 +34,7 @@ export default function run(options) {
 
     fs.copySync(sourcePath, tempPath, {
       filter: (filename) => {
-        return /^((?!(\/(\.npmrc|\.node-version|npm-debug\.log|yarn-error\.log|\.git|node_modules|build|yarn\.lock)(\/|$))).)*$/i.test(filename)
+        return /^((?!([\\/](\.npmrc|\.node-version|npm-debug\.log|yarn-error\.log|\.git|node_modules|build|yarn\.lock)([\\/]|$))).)*$/i.test(filename)
       },
     })
 

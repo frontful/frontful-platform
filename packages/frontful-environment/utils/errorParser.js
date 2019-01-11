@@ -3,14 +3,14 @@ const stripAnsi = require('strip-ansi')
 
 module.exports = function errorParser(e) {
   let result = [], where, what, how
-  
+
   try {
     const stack = e.stack
       .replace(/^.*\n/i, '')
       .replace(RegExp(process.cwd() + '/', 'gi'), './')
-      .replace(/\(.+webpack:\//gi, '(./')
+      .replace(/\(.+webpack:[\\/]/gi, '(./')
       .replace(/.*__webpack_require__.*\n/ig, '')
-      .replace(/.*\(build\/.*\n/ig, '')
+      .replace(/.*\(build[\\/].*\n/ig, '')
       .match(/\(.*\)/gi).map((item) => {
         return item.substr(1, item.length - 2)
           .replace(/:(\d+:\d+)/gi, ' ($1)')

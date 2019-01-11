@@ -23,7 +23,7 @@ export default class Hash {
   }
 
   generate = () => {
-    const files = find.fileSync(/^((?!(\/(\.npmrc|\.node-version|\.hash|npm-debug\.log|yarn-error\.log|\.git|node_modules|yarn\.lock)(\/|$))).)*$/i, this.basePath).sort()
+    const files = find.fileSync(/^((?!([\\/](\.npmrc|\.node-version|\.hash|npm-debug\.log|yarn-error\.log|\.git|node_modules|yarn\.lock)([\\/]|$))).)*$/i, this.basePath).sort()
     const hash = crypto.createHash('sha1')
 
     files.forEach((file) => {
