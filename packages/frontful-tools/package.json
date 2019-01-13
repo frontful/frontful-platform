@@ -1,0 +1,44 @@
+{
+  "name": "frontful-tools",
+  "version": "4.0.1",
+  "private": true,
+  "description": "Tools for Javascript applications",
+  "main": "./common/index.js",
+  "bin": {
+    "frontful-tools": "./bin/frontful-tools.js"
+  },
+  "scripts": {
+    "build": "yarn test && frontful-tools build",
+    "clean": "frontful-tools clean",
+    "deploy": "yarn test && frontful-tools deploy",
+    "test": "yarn test:eslint",
+    "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
+    "tools": "frontful-tools"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-platform.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT",
+  "contributors": [
+    "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
+  ],
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-frontful": "4.x",
+    "babel-register": "^6.26.0",
+    "chalk": "^2.4.2",
+    "eslint-config-frontful": "4.x",
+    "fs-extra": "^7.0.1",
+    "glob": "^7.1.3",
+    "rimraf": "2.x",
+    "tmp": "^0.0.33",
+    "yargs": "^12.0.5"
+  },
+  "devDependencies": {
+    "frontful-tools": "4.x"
+  }
+}

@@ -1,40 +1,38 @@
 {
   "name": "frontful-resolver",
-  "version": "3.1.2",
+  "version": "4.0.1",
   "private": true,
   "description": "State management and binding approach for component based applications with focus on universality, isomorphism, data (pre)fetching and routing",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/frontful/frontful-resolver.git"
-  },
   "main": "./resolver/index.js",
   "scripts": {
-    "build": "yarn test && babel-preset-frontful build",
-    "deploy": "yarn test && babel-preset-frontful deploy",
+    "build": "yarn test && frontful-tools build",
+    "clean": "frontful-tools clean",
+    "deploy": "yarn test && frontful-tools deploy",
     "test": "yarn test:eslint",
-    "test:eslint": "eslint --max-warnings 0 ."
+    "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
+    "tools": "frontful-tools"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-platform.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "license": "MIT",
+  "contributors": [
+    "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
+  ],
   "dependencies": {
     "es6-error": "^4.0.2",
-    "frontful-utils": "3.x",
-    "mobx-react": "^5.2.3"
-  },
-  "peerDependencies": {
-    "frontful-model": "3.x",
+    "frontful-model": "4.x",
+    "frontful-utils": "4.x",
     "mobx": "4.x",
+    "mobx-react": "^5.2.3",
     "react": "16.x",
     "react-dom": "16.x"
   },
   "devDependencies": {
-    "babel-preset-frontful": "3.x",
-    "eslint-config-frontful": "3.x",
-    "frontful-model": "3.x",
-    "mobx": "4.x",
-    "react": "16.x",
-    "react-dom": "16.x"
+    "frontful-tools": "4.x"
   }
 }

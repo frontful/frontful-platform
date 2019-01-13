@@ -8,7 +8,6 @@ module.exports = function provider(options) {
 
   return {
     babelrc: false,
-    cache: false,
     ignore: new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')}))`),
     presets: [
       ['babel-preset-env', {

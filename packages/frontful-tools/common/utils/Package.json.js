@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 
-export default class PackageJSON {
+export default class PackageJson {
   constructor(rootPath) {
     this.filePath = path.resolve(rootPath, 'package.json')
   }

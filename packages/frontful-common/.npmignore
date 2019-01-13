@@ -1,6 +1,11 @@
 .babelrc
+.eslintignore
 .eslintrc
-.hash
+.gitignore
 .node-version
-/build
+.npmrc
+build/
+packages/
+platforms/
+projects/
 yarn.lock

@@ -1,33 +1,34 @@
 {
   "name": "frontful-model",
-  "version": "3.1.2",
+  "version": "4.0.1",
   "private": true,
   "description": "Model provider for component based application with focus on (de)serialization and reactivity",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/frontful/frontful-model.git"
-  },
   "main": "./model/index.js",
   "scripts": {
-    "build": "yarn test && babel-preset-frontful build",
-    "deploy": "yarn test && babel-preset-frontful deploy",
+    "build": "yarn test && frontful-tools build",
+    "clean": "frontful-tools clean",
+    "deploy": "yarn test && frontful-tools deploy",
     "test": "yarn test:eslint",
-    "test:eslint": "eslint --max-warnings 0 ."
+    "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
+    "tools": "frontful-tools"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-platform.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "license": "MIT",
+  "contributors": [
+    "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
+  ],
   "dependencies": {
     "deep-extend": "^0.6.0",
-    "frontful-utils": "3.x"
-  },
-  "peerDependencies": {
+    "frontful-utils": "4.x",
     "mobx": "4.x"
   },
   "devDependencies": {
-    "babel-preset-frontful": "3.x",
-    "eslint-config-frontful": "3.x",
-    "mobx": "4.x"
+    "frontful-tools": "4.x"
   }
 }

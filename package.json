@@ -1,34 +1,31 @@
 {
   "name": "frontful-platform",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "private": true,
   "description": "Frontful platform",
-  "license": "MIT",
   "scripts": {
-    "build": "babel-preset-frontful build ./packages",
-    "clean": "node ./scripts/clean.js",
-    "deploy": "babel-preset-frontful deploy ./packages",
-    "link:all": "node ./scripts/link.all.js",
-    "unlink:all": "node ./scripts/unlink.all.js",
+    "build": "yarn test && frontful-tools build 'packages/*/'",
+    "clean": "frontful-tools clean 'packages/*/' && frontful-tools clean",
+    "deploy": "yarn test && frontful-tools deploy 'packages/*/'",
+    "install": "frontful-tools install",
+    "link:all": "frontful-tools link 'packages/*/'",
     "test": "yarn test:eslint",
-    "test:eslint": "eslint --max-warnings 0 ."
+    "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
+    "tools": "frontful-tools",
+    "unlink:all": "frontful-tools unlink 'packages/*/'"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/frontful/frontful-platform.git"
   },
+  "license": "MIT",
   "contributors": [
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces:disabled": {
+    "packages": ["packages/*"]
+  },
   "devDependencies": {
-    "babel-preset-frontful": "3.x",
-    "eslint-config-frontful": "3.x",
-    "mobx": "^4.x",
-    "react": "^16.x",
-    "react-dom": "16.x",
-    "rimraf": "^2.6.2"
+    "frontful-tools": "4.x"
   }
 }
