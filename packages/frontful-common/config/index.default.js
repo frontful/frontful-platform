@@ -12,6 +12,8 @@ module.exports = {
     'frontful-router',
     'frontful-style',
     'frontful-utils',
+    'frontful-tools',
+    'frontful-store-sql',
   ],
   alias: {},
 }

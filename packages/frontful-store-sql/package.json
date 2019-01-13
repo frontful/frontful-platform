@@ -1,8 +1,9 @@
 {
-  "name": "frontful-common",
-  "version": "4.0.2",
+  "name": "frontful-store-sql",
+  "version": "4.0.1",
   "private": true,
-  "description": "Common configuration provider for Frontful infrastructure",
+  "description": "Frontful store for SQL",
+  "main": "./common/index.js",
   "scripts": {
     "build": "yarn test && frontful-tools build",
     "clean": "frontful-tools clean",
@@ -10,10 +11,6 @@
     "test": "yarn test:eslint",
     "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
     "tools": "frontful-tools"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/frontful/frontful-common.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -23,8 +20,9 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-    "frontful-config": "4.x",
-    "object-path": "^0.11.4"
+    "deep-extend": "^0.6.0",
+    "sequelize": "^4.42.0",
+    "tedious": "^4.1.3"
   },
   "devDependencies": {
     "frontful-tools": "4.x"
