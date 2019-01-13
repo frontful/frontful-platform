@@ -48,15 +48,15 @@ module.exports = function provider(options) {
       filename: `../../server/[name].js`,
       publicPath: '/assets/',
       libraryTarget: 'commonjs-module',
-      // devtoolModuleFilenameTemplate: `${cwd}/[resource-path]`,
-      devtoolModuleFilenameTemplate: (info) => {
-        if (info.absoluteResourcePath.includes(cwd)) {
-          return `${info.absoluteResourcePath}`
-        }
-        else {
-          return `frontful:${info.absoluteResourcePath}`
-        }
-      },
+      devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+      // devtoolModuleFilenameTemplate: (info) => {
+      //   if (info.absoluteResourcePath.includes(cwd)) {
+      //     return `${info.absoluteResourcePath}`
+      //   }
+      //   else {
+      //     return `frontful:${info.absoluteResourcePath}`
+      //   }
+      // },
     },
     plugins: [
       new webpack.optimize.OccurrenceOrderPlugin(),

@@ -25,7 +25,7 @@
   "workspaces:disabled": {
     "packages": ["packages/*"]
   },
-  "devDependencies": {
+  "dependencies": {
     "frontful-tools": "4.x"
   }
 }
