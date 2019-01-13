@@ -224,7 +224,8 @@ class Manager {
     style.type = 'text/css'
     if (style.styleSheet) {
       style.styleSheet.cssText = css
-    } else {
+    }
+    else {
       style.appendChild(document.createTextNode(css))
     }
     return style

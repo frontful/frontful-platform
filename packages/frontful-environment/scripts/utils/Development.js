@@ -40,7 +40,8 @@ module.exports = class Development {
               map: getFileSystem().readFileSync(source.replace(/\.js$/i, '.js.map'), 'utf8')
             };
           }
-        } catch(error) {}
+        }
+        catch(error) {}
         return null
       }
     })

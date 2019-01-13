@@ -39,6 +39,7 @@ module.exports = function provider(options) { // eslint-disable-line
       }
     },
     rules: {
+      'brace-style': ['warn', 'stroustrup', { 'allowSingleLine': true }],
       // http://eslint.org/docs/rules/
       'array-callback-return': 'warn',
       'default-case': ['warn', { commentPattern: '^no default$' }],

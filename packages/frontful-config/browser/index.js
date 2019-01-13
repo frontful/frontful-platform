@@ -4,7 +4,8 @@ if (typeof window !== 'undefined') {
   if (window.frontful) {
     config = window.frontful.config
   }
-} else if (typeof global !== 'undefined') {
+}
+else if (typeof global !== 'undefined') {
   if (global.frontful) {
     config = global.frontful.config.browser
     config.getScript = function() {

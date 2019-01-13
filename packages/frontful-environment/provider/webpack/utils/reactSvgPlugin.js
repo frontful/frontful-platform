@@ -29,7 +29,8 @@ module.exports = function (babel) {
         path.node.name = t.jSXIdentifier(
           namespaceToCamel(path.node.name.namespace.name, path.node.name.name.name)
         )
-      } else if (t.isJSXIdentifier(path.node.name)) {
+      }
+      else if (t.isJSXIdentifier(path.node.name)) {
         if (path.node.name.name === 'class') {
           path.node.name.name = "className"
         }
