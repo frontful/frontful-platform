@@ -1,0 +1,27 @@
+{
+  "name": "TEMPLATE/package",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TEMPLATE package",
+  "main": "./common/index.js",
+  "scripts": {
+    "build": "yarn test && frontful-tools build",
+    "clean": "frontful-tools clean",
+    "deploy": "yarn test && frontful-tools deploy",
+    "test": "yarn test:eslint",
+    "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",
+    "tools": "frontful-tools"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT",
+  "contributors": [
+    "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "frontful-tools": "4.x"
+  }
+}
