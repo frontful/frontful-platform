@@ -170,10 +170,22 @@ const prototype = {
       method: 'POST'
     })
   },
+  search(path, body, options) {
+    return this.request(path, body, {
+      ...options,
+      method: 'SEARCH'
+    })
+  },
   put(path, body, options) {
     return this.request(path, body, {
       ...options,
       method: 'PUT'
+    })
+  },
+  patch(path, body, options) {
+    return this.request(path, body, {
+      ...options,
+      method: 'PATCH'
     })
   },
   delete(path, body, options) {

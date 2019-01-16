@@ -1,0 +1,7 @@
+{
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+  "files.eol": "\n"
+}
