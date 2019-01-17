@@ -58,6 +58,11 @@ class Format {
               configurable: false,
             })
             value = observable.box(this.deserializeValue(this.format[key], state[key], context, () => object[key]), {deep: false})
+            Object.defineProperty(object, `${key}$`, {
+              value: value,
+              enumerable: true,
+              configurable: false,
+            })
           }
           return object
         }, getSelf())
