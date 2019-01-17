@@ -14,7 +14,7 @@ style.bind = function (definition) {
   let style = manager.createStyle(definition)
 
   function decorator (Component) {
-    return class StyleComponent extends React.Component {
+    class StyleComponent extends React.Component {
       static contextTypes = {
         'style.manager.session': PropTypes.any
       }
@@ -64,6 +64,8 @@ style.bind = function (definition) {
         })
       }
     }
+
+    return Object.assign(StyleComponent, Component)
   }
 
   decorator.with = function(...args) {
