@@ -65,9 +65,9 @@ class Content {
   }
 
   @action
-  register(key, mgmt) {
+  register(key, mgmt, defaultValue) {
     if (!this.keys.has(key)) {
-      this.keys.set(key, `"${key}"`)
+      this.keys.set(key, defaultValue || `{${key}}`)
     }
     if (mgmt) {
       if (!this.mapping.has(key)) {

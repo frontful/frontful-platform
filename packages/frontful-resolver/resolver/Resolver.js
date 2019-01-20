@@ -348,7 +348,7 @@ export class Resolver {
     return this.invokeReactivity(this.resolversTree).then(() => {
       const Component = this.Component
       const getRequisites = this.getRequisites.bind(this)
-      const dispose = () => {this.dispose()}
+      // const dispose = () => {this.dispose()}
 
       const result = observer(
         class Resolver extends React.Component {
@@ -359,7 +359,7 @@ export class Resolver {
             )
           }
           componentWillUnmount() {
-            dispose()
+            // dispose()
           }
         }
       )

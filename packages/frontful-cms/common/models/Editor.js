@@ -1,6 +1,6 @@
-import {model} from 'frontful-model'
+import {model, formatter} from 'frontful-model'
 import Content from './Content'
-import {computed, untracked} from 'mobx'
+import {computed, action} from 'mobx'
 import objectPath from 'object-path'
 import React from 'react'
 import Manager from '../services/manager'
@@ -9,6 +9,7 @@ import Manager from '../services/manager'
   content: models.global(Content),
 }))
 @model({
+  expanded: formatter.map(),
 })
 class Editor {
   @computed
@@ -39,6 +40,15 @@ class Editor {
     }
     return managers
   }
+
+  toggle = action((key) => {
+    if (this.expanded.has(key)) {
+      this.expanded.delete(key)
+    }
+    else {
+      this.expanded.set(key, true)
+    }
+  })
 }
 
 export default Editor

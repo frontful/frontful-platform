@@ -26,7 +26,7 @@ class Provider {
     return model
   }
 
-  html = (key) => {
+  html = (key, defaultValue) => {
     key = Provider.getKey(this.prefix, key)
     const provider = this
     @observer
@@ -39,7 +39,7 @@ class Provider {
         )
       }
       UNSAFE_componentWillMount() {
-        provider.content.register(key)
+        provider.content.register(key, null, defaultValue)
       }
     }
     return <Component />
