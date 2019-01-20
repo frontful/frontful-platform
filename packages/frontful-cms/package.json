@@ -22,6 +22,20 @@
   "dependencies": {
   },
   "devDependencies": {
-    "frontful-tools": "4.x"
+    "@frontful/viapro-api": "2.x",
+    "body-parser": "^1.17.2",
+    "deep-extend": "^0.6.0",
+    "express": "^4.15.2",
+    "frontful-config": "4.x",
+    "frontful-model": "4.x",
+    "frontful-resolver": "4.x",
+    "frontful-style": "4.x",
+    "frontful-tools": "4.x",
+    "frontful-utils": "4.x",
+    "mobx-react": "^5.2.3",
+    "mobx": "4.x",
+    "object-path": "^0.11.4",
+    "react-dom": "16.x",
+    "react": "16.x"
   }
 }

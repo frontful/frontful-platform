@@ -1,5 +1,1 @@
-export default class Template {
-  toString() {
-    return 'Template'
-  }
-}
+export {default} from './models/Content'
