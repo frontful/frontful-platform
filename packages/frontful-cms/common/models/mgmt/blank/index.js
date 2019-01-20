@@ -1,8 +1,8 @@
-import Component from './Component'
+import Component from './Blank'
 import Model from './Model'
 
 export default {
-  name: 'content.text',
+  name: 'content.blank',
   Model,
   Component,
   get Service() {

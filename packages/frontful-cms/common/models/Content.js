@@ -2,7 +2,7 @@ import {action, observable} from 'mobx'
 import {model, formatter} from 'frontful-model'
 import Api from '@frontful/viapro-api'
 import extend from 'deep-extend'
-import mgmtText from './mgmt/text'
+import mgmtBlank from './mgmt/blank'
 import Provider from './Provider';
 
 function getDefaultPreferences() {
@@ -56,23 +56,26 @@ class Content {
     }
   }
 
-  config(prefix, mgmt = mgmtText) {
-    if (!this.providers.has(prefix)) {
-      this.providers.set(prefix, new Provider(this, prefix, mgmt))
+  cms(prefix, mgmt = mgmtBlank) {
+    const key = Provider.getKey(prefix, '$model')
+    if (!this.providers.has(key)) {
+      this.providers.set(key, new Provider(this, prefix, mgmt))
     }
-    return this.providers.get(prefix)
+    return this.providers.get(key)
   }
 
   @action
   register(key, mgmt) {
     if (!this.keys.has(key)) {
-      this.keys.set(key, `{${key}}`)
+      this.keys.set(key, `"${key}"`)
     }
-    if (!this.mapping.has(key)) {
-      this.mapping.set(key, mgmt.name)
-    }
-    if (!this.services.has(mgmt.name)) {
-      this.services.set(mgmt.name, mgmt)
+    if (mgmt) {
+      if (!this.mapping.has(key)) {
+        this.mapping.set(key, mgmt.name)
+      }
+      if (!this.services.has(mgmt.name)) {
+        this.services.set(mgmt.name, mgmt)
+      }
     }
   }
 }

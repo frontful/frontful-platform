@@ -9,9 +9,9 @@ class Provider {
     this.model = this.getModel()
   }
 
-  getKey(key) {
-    if (this.prefix) {
-      return `${this.prefix}.${key}`
+  static getKey(prefix, key) {
+    if (prefix) {
+      return `${prefix}.${key}`
     }
     else {
       return key
@@ -19,25 +19,27 @@ class Provider {
   }
 
   getModel() {
-    const key = this.getKey('$model')
+    const key = Provider.getKey(this.prefix, '$model')
     const state = JSON.parse(this.content.keys.get(key) || 'null')
     const model = new this.mgmt.Model(state, this.content.context)
+    this.content.register(key, this.mgmt)
     return model
   }
 
   html = (key) => {
-    key = this.getKey(key)
+    key = Provider.getKey(this.prefix, key)
+    const provider = this
     @observer
     class Component extends React.Component {
       render() {
         return (
           <div className="cnt" dangerouslySetInnerHTML={{
-            __html: this.model.hasOwnProperty('text') ? this.model.text : 'N/A'
+            __html: provider.content.keys.get(key)
           }} />
         )
       }
       UNSAFE_componentWillMount() {
-        this.content.register(key, this.mgmt)
+        provider.content.register(key)
       }
     }
     return <Component />

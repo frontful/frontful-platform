@@ -6,18 +6,16 @@ import React from 'react'
   resolve(() => ({
   }))
 })
-@style(require('./Component.style'))
-class Component extends React.Component {
+@style(require('./Blank.style'))
+class Blank extends React.Component {
   render() {
     const {style} = this.props
     return (
       <div className={style.css('mgmt')}>
-        <div>{'Language'}</div>
-        <div>{'Language preset'}</div>
-        <div>{'Services preset'}</div>
+        {'Blank'}
       </div>
     )
   }
 }
 
-export default Component
+export default Blank

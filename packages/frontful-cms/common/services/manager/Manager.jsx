@@ -1,12 +1,10 @@
 import {resolver} from 'frontful-resolver'
 import {style} from 'frontful-style'
 import Content from '../../models/Content'
-import ManagerModel from '../../models/Manager'
 import React from 'react'
 
 @resolver.define(({models}) => ({
   cms: models.global(Content).cms('content.manager'),
-  manager: models.global(ManagerModel)
 }))
 @resolver((resolve) => {
   resolve(({cms, model, Component, save}) => ({
@@ -19,7 +17,6 @@ import React from 'react'
 class Manager extends React.PureComponent {
   render() {
     const {style, html, Component, save} = this.props
-
     return (
       <div className={style.css('manager')}>
         <Component />
