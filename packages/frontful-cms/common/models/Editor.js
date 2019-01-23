@@ -46,7 +46,6 @@ class Editor {
         )
       }
     }
-    // console.log(managers)
     return managers
   }
 

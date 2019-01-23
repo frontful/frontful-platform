@@ -1,53 +1,41 @@
-import {action, observable, computed} from 'mobx'
+import {action, observable} from 'mobx'
 import {model, formatter} from 'frontful-model'
 import Api from '@frontful/viapro-api'
 import extend from 'deep-extend'
-import Provider from './Provider';
-
-function getDefaultPreferences() {
-  return {
-    language: 'en',
-    presets: {
-      language: 'default',
-      services: 'default',
-    },
-  }
-}
+import Provider from './Provider'
+import {debounce} from 'throttle-debounce'
+import getDefaultPreferences from '../common/getDefaultPreferences'
 
 @model.define(({models, config}) => ({
-  api: models.global(Api),
-  cookies: config['frontful-cms'].cookies,
+  $api: models.global(Api),
+  $cookies: config['frontful-cms'].cookies,
+  $keys: config['frontful-cms'].keys,
 }))
 @model({
   preferences: formatter.ref(null, getDefaultPreferences()),
 })
 class Content {
-  keys = observable.map()
-  providers = observable.map()
-  relations = observable.map()
-
   constructor() {
+    this.keys = this.$keys instanceof Map ? this.$keys : observable.map(this.$keys)
+    this.providers = observable.map()
+    this.relations = observable.map()
+    this.queue = {
+      text: new Map(),
+      config: new Map(),
+    }
     this.updatePreferences()
-  }
-
-  resolve() {
-    return Promise.resolve({
-      preferences: this.preferences
-    }).then(action(() => {
-      this.keys.replace({})
-    }))
   }
 
   @action
   updatePreferences(preferences) {
-    if (preferences || !this.cookies.get('FRONTFUL_CONTENT_PREFERENCES')) {
+    if (preferences || !this.$cookies.get('FRONTFUL_CONTENT_PREFERENCES')) {
       const cookie = JSON.stringify(extend(getDefaultPreferences(), preferences))
-      this.cookies.set('FRONTFUL_CONTENT_PREFERENCES', cookie, {
+      this.$cookies.set('FRONTFUL_CONTENT_PREFERENCES', cookie, {
         path: '/',
       })
     }
     try {
-      this.preferences = JSON.parse(this.cookies.get('FRONTFUL_CONTENT_PREFERENCES'))
+      this.preferences = JSON.parse(this.$cookies.get('FRONTFUL_CONTENT_PREFERENCES'))
     }
     catch (error) {
       this.preferences = getDefaultPreferences()
@@ -77,11 +65,32 @@ class Content {
     })
   }
 
+  uploadQueue = debounce(750, action(() => {
+    if (process.env.IS_BROWSER) {
+      const update = {
+        text: [...this.queue.text],
+        config: [...this.queue.config],
+      }
+      this.$api.post('/content', update).then(() => {
+        this.queue.text.clear()
+        this.queue.config.clear()
+      })
+    }
+  }))
+
+  @action
+  addToQueue(key, value) {
+    const type = this.providers.has(key) ? 'config' : 'text'
+    this.queue[type].set(key, value)
+    this.uploadQueue()
+  }
 
   @action
   registerResolved(key, mgmt, defaultValue, globalCandidate) {
     if (!this.keys.has(key)) {
-      this.keys.set(key, defaultValue || `"${key}"`)
+      const value = defaultValue || `"${key}"`
+      this.keys.set(key, value)
+      this.addToQueue(key, value)
     }
     if (mgmt) {
       if (!this.providers.has(key)) {

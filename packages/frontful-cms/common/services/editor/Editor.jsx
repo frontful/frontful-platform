@@ -74,7 +74,9 @@ class Editor extends React.Component {
                 className={style.css('text_manager')}    
                 value={editor.content.keys.get(resolvedKey)}
                 onChange={(event) => {
-                  editor.content.keys.set(resolvedKey, event.target.value)
+                  const value = event.target.value
+                  editor.content.keys.set(resolvedKey, value)
+                  editor.content.addToQueue(resolvedKey, value)
                 }}
               ></textarea>
             )
