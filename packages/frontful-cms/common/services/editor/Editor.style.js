@@ -3,6 +3,21 @@ export default ({css}) => {
     padding: '15px 15px 5px 0px',
   })
 
+  css('.filter', {
+    paddingLeft: '15px',
+  })
+
+  css('.filter > input', {
+    padding: '5px',
+    margin: '0',
+    width: '100%',
+    border: '1px solid #B8B8B8',
+  })
+
+  css('.filter > input.FILTERED', {
+    border: '1px solid #0261B8',
+  })
+
   css('.manager_wrapper', {
     display: 'flex',
     margin: '4px 0',
@@ -84,6 +99,25 @@ export default ({css}) => {
   })
 
   css('.manager_name', {
+    flexGrow: '1',
+  })
+
+  css('.link_manager', {
+    paddingRight: '7px',
+  })
+
+  css('.link_manager > svg', {
+    height: '25px',
+    width: '17px',
+    fill: '#555555',
+  })
+
+  css('.link_manager > svg.LINKED', {
+    fill: '#0261B8',
+  })
+
+  css('.link_manager > svg.UNLINKED', {
+    opacity: '0.5',
   })
 
   css('.manager_component', {

@@ -2,14 +2,17 @@ import {resolver} from 'frontful-resolver'
 import React from 'react'
 
 @resolver((resolve) => {
-  resolve(({model, Component}) => ({
-    Component: <Component model={model} />,
+  resolve(({model, View}) => ({
+    View: <View model={model} />,
   }))
 })
 class Manager extends React.PureComponent {
   render() {
-    const {Component} = this.props
-    return <Component />
+    const {View} = this.props
+    return <div>
+      <div>aaaa</div>
+      <View />
+    </div>
   }
 }
 

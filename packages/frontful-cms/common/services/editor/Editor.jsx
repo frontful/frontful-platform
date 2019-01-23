@@ -7,40 +7,49 @@ import React from 'react'
 import {observer} from 'mobx-react'
 import IconPlus from '../../assets/icons/plus.jsx.svg'
 import IconMinus from '../../assets/icons/minus.jsx.svg'
+import IconLink from '../../assets/icons/link.jsx.svg'
+import IconUnlink from '../../assets/icons/unlink.jsx.svg'
+import {untracked} from 'mobx'
 
 @resolver.define(({models}) => ({
-  cms: models.global(Content).cms('content.editor', mgmt),
+  cms: models.global(Content).cms('content!editor', mgmt),
   editor: models.global(EditorModel)
 }))
 @resolver((resolve) => {
   resolve(({cms, editor}) => ({
+    editor,
     html: cms.html,
     config: cms.model,
-    json: editor.json,
-    editor: editor,
-    contentModel: editor.content,
-    managers: Promise.resolve().then(() => resolve.value(editor.managers)) ,
+    managers: resolve.value(editor.managers),
   }))
 })
 @style(require('./Editor.style'))
 @observer
 class Editor extends React.Component {
   renderKeys(json, prefix, depth = 1) {
-    const {managers, style, html, config, editor, contentModel} = this.props
-    const keys = Object.keys(json).sort()
+    const {managers, style, html, config, editor} = this.props
+    const keys = Object.keys(json).sort((a, b) => {
+      if (!json[a].hasOwnProperty('$editor')) a = '%' + a
+      if (!json[b].hasOwnProperty('$editor')) b = '%' + b
+      if (a < b) return -1
+      if (a > b) return 1
+      return 0
+    })
     return keys.map((key) => {
       const contentKey = prefix ? `${prefix}.${key}` : key
+      const isLinkable = editor.content.relations.has(contentKey)
+      const resolvedKey = untracked(() => editor.content.resolveKey(contentKey))
       let type
       if (!json[key].hasOwnProperty('$editor')) {
         type = 'KEY'
       }
-      else if (managers[contentKey]) {
+      else if (managers[resolvedKey]) {
         type = 'MANAGER'
       }
       else {
         type = 'FULL_CONTROL'
       }
-      const autoExpand = depth <= config.autoExpandDepth && type === 'KEY'
+      const autoExpand = (depth <= config.autoExpandDepth && type === 'KEY') || (editor.filter && keys.length === 1)
       const expanded = (autoExpand ? !editor.expanded.has(contentKey) : editor.expanded.has(contentKey)) ? 'EXPANDED' : null
       let content = null
       if (type === 'KEY') {
@@ -50,7 +59,7 @@ class Editor extends React.Component {
         }
       }
       else if (type === 'MANAGER') {
-        const Manager = managers[contentKey]
+        const Manager = managers[resolvedKey]
         content = {
           type,
           Component: expanded && Manager,
@@ -59,15 +68,17 @@ class Editor extends React.Component {
       else if (type === 'FULL_CONTROL') {
         content =  {
           type,
-          Component: expanded && observer(() => (
-            <textarea
-              className={style.css('text_manager')}
-              value={contentModel.keys.get(contentKey)}
-              onChange={(event) => {
-                contentModel.keys.set(contentKey, event.target.value)
-              }}
-            ></textarea>
-          ))
+          Component: expanded && observer(() => {
+            return (
+              <textarea
+                className={style.css('text_manager')}    
+                value={editor.content.keys.get(resolvedKey)}
+                onChange={(event) => {
+                  editor.content.keys.set(resolvedKey, event.target.value)
+                }}
+              ></textarea>
+            )
+          })
         }
       }
       return !content ? null : (
@@ -76,13 +87,20 @@ class Editor extends React.Component {
             {expanded ? <IconMinus /> : <IconPlus />}
           </div>
           <div className={style.css('manager_content', content.type, expanded)}>
-            <div onClick={() => editor.toggle(contentKey)} className={style.css('name_wrapper', content.type, expanded)}>
+            <div className={style.css('name_wrapper', content.type, expanded)}>
               {content.type !== 'KEY' &&
                 <div className={style.css('manager_accent')}></div>
               }
-              <div className={style.css('manager_name')}>
+              <div onClick={() => editor.toggle(contentKey)} className={style.css('manager_name')}>
                 {key}
               </div>
+              {expanded && isLinkable &&
+                <div onClick={() => {editor.toggleLink(contentKey); this.forceUpdate()}} className={style.css('link_manager')}>
+                  {untracked(() => editor.content.keys.get(contentKey) === ':resolve') ?
+                    <IconLink className={style.css('LINKED')}/> : <IconUnlink className={style.css('UNLINKED')}/>
+                  }
+                </div>
+              }
             </div>
             {expanded && (
               <React.Fragment>
@@ -91,8 +109,8 @@ class Editor extends React.Component {
                 </div>
                 {content.type === 'MANAGER' &&
                   <div className={style.css('manager_controls')}>
-                    <span>{html('discard', 'Discard')}</span>
-                    <span>{html('save', 'Save')}</span>
+                    <span>{html('action.discard', 'Discard')}</span>
+                    <span>{html('action.save', 'Save')}</span>
                   </div>
                 }
               </React.Fragment>
@@ -104,10 +122,21 @@ class Editor extends React.Component {
   }
 
   render() {
-    const {style, json} = this.props
+    const {style, editor} = this.props
     return (
       <div className={style.css('editor')}>
-        {this.renderKeys(json)}
+        <div className={style.css('filter')}>
+          <input
+            type="text"
+            placeholder="Filter keys and values"
+            value={editor.filter}
+            onChange={(event) => {
+              editor.filter = event.target.value
+            }}
+            className={style.css(editor.filter && 'FILTERED')}
+          ></input>
+        </div>
+        {this.renderKeys(editor.json)}
       </div>
     )
   }

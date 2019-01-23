@@ -4,15 +4,15 @@ import {observer as mobxObserver} from 'mobx-react'
 import {untracked, observable, reaction} from 'mobx'
 import {Exceptions} from './Exceptions'
 
-let Promisable = Promise
-let observer = (Component) => (Component)
+let Promisable
+let observer
 
 if (isBrowser()) {
   Promisable = PromisableClass
   observer = mobxObserver
 }
 else {
-  Promisable = Promise
+  Promisable = PromisableClass
   observer = (Component) => (Component)
 }
 
@@ -88,7 +88,7 @@ export class Resolver {
               return prevRes.concat(newRes.__array__)
             })
           })
-        }, Promise.resolve([]))
+        }, Promisable.resolve([]))
       }
     }
     else {
@@ -97,7 +97,7 @@ export class Resolver {
       }
     }
 
-    resolverResult = resolverResult || {}
+    resolverResult = {...resolverResult}
 
     return Promisable.all(
       Object.keys(resolverResult).map((key) => {
@@ -198,6 +198,7 @@ export class Resolver {
         item.resolvers.forEach((resolver) => {
           resolver.dispose(true)
         })
+        item.resolvers = []
       }
       this.disposeResolversTree([item.next])
 
@@ -257,27 +258,28 @@ export class Resolver {
   resolveObject(object) {
     if (object) {
       const keys = Object.keys(object)
-      return Promise.all(keys.map((key) => object[key])).then((results) => {
+      return Promisable.all(keys.map((key) => object[key])).then((results) => {
         return keys.reduce((object, key, idx) => {
           object[key] = results[idx]
           return object
         }, {})
       })
     }
-    return Promise.resolve(null)
+    return Promisable.resolve(null)
   }
 
   invokeReactivity(resolversTree) {
     const def = untracked(() => this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, this.props) : null)
     return this.resolveObject(def).then((definerObject) => {
       this.definerObject = definerObject
-      return Promise.all(resolversTree.map(this.itemResolver))
+      return Promisable.all(resolversTree.map(this.itemResolver))
     })
   }
 
   setRequisites() {
-    if (this.isDisposed) {return}
-
+    if (this.isDisposed) {
+      return
+    }
     const extractRequisitesFromResolversTree = (resolversTree) => {
       return resolversTree.reduce((result, item) => {
         if (item) {
@@ -335,6 +337,7 @@ export class Resolver {
           item.resolvers.forEach((resolver) => {
             resolver.dispose(full)
           })
+          item.resolvers = []
         }
       }
     })
@@ -358,9 +361,9 @@ export class Resolver {
               requisites && Component && <Component resolved={requisites} {...requisites} {...this.props}/>
             )
           }
-          componentWillUnmount() {
-            // dispose()
-          }
+          // componentWillUnmount() {
+          //   dispose()
+          // }
         }
       )
 

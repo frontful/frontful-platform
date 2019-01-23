@@ -1,8 +1,7 @@
-import {action, observable} from 'mobx'
+import {action, observable, computed} from 'mobx'
 import {model, formatter} from 'frontful-model'
 import Api from '@frontful/viapro-api'
 import extend from 'deep-extend'
-import mgmtBlank from './mgmt/blank'
 import Provider from './Provider';
 
 function getDefaultPreferences() {
@@ -24,9 +23,8 @@ function getDefaultPreferences() {
 })
 class Content {
   keys = observable.map()
-  services = observable.map()
-  mapping = observable.map()
   providers = observable.map()
+  relations = observable.map()
 
   constructor() {
     this.updatePreferences()
@@ -56,27 +54,65 @@ class Content {
     }
   }
 
-  cms(prefix, mgmt = mgmtBlank) {
-    const key = Provider.getKey(prefix, '$model')
-    if (!this.providers.has(key)) {
-      this.providers.set(key, new Provider(this, prefix, mgmt))
+  resolveKey(key) {
+    key = key.replace(/!/gi, '.').replace(/^[.!]+/gi, '')
+    const value = this.keys.get(key)
+    if (value === ':resolve' && this.relations.has(key)) {
+      return this.resolveKey(this.relations.get(key))
     }
-    return this.providers.get(key)
+    return key
+  }
+
+  cms(key, mgmt) {
+    const content = this
+    key = Provider.getKey(key, Provider.sufix)
+    content.register(key, mgmt || 'BLANK', 'null')
+    return observable.object({
+      get html() {
+        return content.providers.get(content.resolveKey(key)).html
+      },
+      get model() {
+        return content.providers.get(content.resolveKey(key)).model
+      }
+    })
+  }
+
+
+  @action
+  registerResolved(key, mgmt, defaultValue, globalCandidate) {
+    if (!this.keys.has(key)) {
+      this.keys.set(key, defaultValue || `"${key}"`)
+    }
+    if (mgmt) {
+      if (!this.providers.has(key)) {
+        this.providers.set(key, new Provider(this, key, globalCandidate))
+      }
+      this.providers.get(key).initialise(mgmt !== 'BLANK' ? mgmt : null)
+    }
   }
 
   @action
   register(key, mgmt, defaultValue) {
-    if (!this.keys.has(key)) {
-      this.keys.set(key, defaultValue || `{${key}}`)
-    }
-    if (mgmt) {
-      if (!this.mapping.has(key)) {
-        this.mapping.set(key, mgmt.name)
+    let globalCandidate = key
+    let globalIndex = globalCandidate.indexOf('!')
+    const resolvedKey = key.replace(/^[.!]+/gi, '').replace(/!/gi, '.')
+    let child = resolvedKey
+    while (globalIndex !== -1) {
+      const globalKey = 'global.' + globalCandidate.substring(globalIndex + 1)
+      const resolvedKey = globalKey.replace(/!/gi, '.')
+      globalCandidate = globalCandidate.substring(0, globalIndex) + '.' + globalCandidate.substring(globalIndex + 1, globalCandidate.length)
+      globalIndex = globalCandidate.indexOf('!')
+      if (globalIndex === -1) {
+        this.registerResolved(resolvedKey, mgmt, defaultValue, key)
+        defaultValue = ':resolve'
       }
-      if (!this.services.has(mgmt.name)) {
-        this.services.set(mgmt.name, mgmt)
+      else {
+        this.registerResolved(resolvedKey, mgmt, ':resolve', key)
       }
+      this.relations.set(child, resolvedKey)
+      child = resolvedKey
     }
+    this.registerResolved(resolvedKey, mgmt, defaultValue, key)
   }
 }
 

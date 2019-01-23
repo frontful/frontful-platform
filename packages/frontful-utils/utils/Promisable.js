@@ -43,7 +43,10 @@ export class Promisable {
   }
 
   static resolve(resolvable) {
-    if (resolvable && resolvable.then && !resolvable.isResolution) {
+    if (resolvable && resolvable.isResolution) {
+      return new Resolution(resolvable.results)
+    }
+    else if (resolvable && resolvable.then && !resolvable.isResolution) {
       return Promise.resolve(resolvable)
     }
     else {

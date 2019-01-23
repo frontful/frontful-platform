@@ -2,28 +2,36 @@ import {observer} from 'mobx-react'
 import React from 'react'
 
 class Provider {
-  constructor(content, prefix, mgmt) {
+  static sufix = '$model'
+
+  constructor(content, key, globalCandidate) {
     this.content = content
-    this.prefix = prefix
-    this.mgmt = mgmt
-    this.model = this.getModel()
+    this.key = key
+    this.prefix = globalCandidate.replace(Provider.sufix, '')
+  }
+
+  initialise(mgmt) {
+    if (!this.mgmt && mgmt) {
+      this.mgmt = mgmt
+      const state = JSON.parse(this.resolveValue(this.key))
+      this.model = new this.mgmt.Model(state, this.content.context)
+    }
+    else {
+      if (mgmt && this.mgmt !== mgmt) {
+        throw new Error('Content provider `mgmt` object mismatch')
+      }
+    }
   }
 
   static getKey(prefix, key) {
     if (prefix) {
-      return `${prefix}.${key}`
+      key = `${prefix}.${key}`
     }
-    else {
-      return key
-    }
+    return key.replace(/[.!]{0,}![.!]{0,}/gi, '!').replace(/\.+(?=\.)|!+(?=!)/gi, '')
   }
 
-  getModel() {
-    const key = Provider.getKey(this.prefix, '$model')
-    const state = JSON.parse(this.content.keys.get(key) || 'null')
-    const model = new this.mgmt.Model(state, this.content.context)
-    this.content.register(key, this.mgmt)
-    return model
+  resolveValue(key) { 
+    return this.content.keys.get(this.content.resolveKey(key))
   }
 
   html = (key, defaultValue) => {
@@ -34,7 +42,7 @@ class Provider {
       render() {
         return (
           <div className="cnt" dangerouslySetInnerHTML={{
-            __html: provider.content.keys.get(key)
+            __html: provider.resolveValue(key)
           }} />
         )
       }
