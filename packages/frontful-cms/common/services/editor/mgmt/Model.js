@@ -1,11 +1,9 @@
 import {model} from 'frontful-model'
-import Field from './Field';
+import Field from 'frontful-field'
 
 @model({
   autoExpandDepth: 1,
-  showFullPath: false,
   showGlobal: true,
-  showPageContext: true,
   language: 'en',
   presets: {
     language: 'default',
@@ -19,9 +17,9 @@ class Model {
         get: () => this.language,
         set: (value) => {this.language = value},
       }),
-      showFullPath: new Field({
-        get: () => this.showFullPath,
-        set: (value) => {this.showFullPath = value},
+      showGlobal: new Field({
+        get: () => this.showGlobal,
+        set: (value) => {this.showGlobal = value},
       }),
     }
   }

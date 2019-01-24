@@ -1,10 +1,10 @@
 import {action, observable} from 'mobx'
+import {debounce} from 'throttle-debounce'
 import {model, formatter} from 'frontful-model'
 import Api from '@frontful/viapro-api'
 import extend from 'deep-extend'
-import Provider from './Provider'
-import {debounce} from 'throttle-debounce'
 import getDefaultPreferences from '../common/getDefaultPreferences'
+import Provider from './Provider'
 
 @model.define(({models, config}) => ({
   $api: models.global(Api),
@@ -77,6 +77,12 @@ class Content {
       })
     }
   }))
+
+  @action
+  update(key, value) {
+    this.keys.set(key, value)
+    this.addToQueue(key, value)
+  }
 
   @action
   addToQueue(key, value) {

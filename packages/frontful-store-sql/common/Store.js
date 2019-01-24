@@ -61,7 +61,7 @@ export default class Store {
           if (object === null) {
             operation = 'IS'
           }
-          else if (nameParts[nameParts.length - 1] === 'created') {
+          else if (typeof object === 'number') {
             operation = '<='
           }
           else {

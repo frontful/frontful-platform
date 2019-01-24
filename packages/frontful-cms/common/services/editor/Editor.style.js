@@ -148,6 +148,7 @@ export default ({css}) => {
     color: '#0261B8',
     paddingLeft: '10px',
     textDecoration: 'underline',
+    cursor: 'pointer',
   })
 
   css('.text_manager', {

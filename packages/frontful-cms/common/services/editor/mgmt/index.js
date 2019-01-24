@@ -1,4 +1,4 @@
-import Component from './Component'
+import Component from './Manager'
 import Model from './Model'
 import Service from '../.'
 

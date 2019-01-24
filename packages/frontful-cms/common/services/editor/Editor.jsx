@@ -1,15 +1,15 @@
+import {observer} from 'mobx-react'
 import {resolver} from 'frontful-resolver'
 import {style} from 'frontful-style'
+import {untracked} from 'mobx'
 import Content from '../../models/Content'
-import EditorModel from '../../models/Editor'
+import EditorModel from './Editor.model'
+import IconLink from '../../assets/icons/link.jsx.svg'
+import IconMinus from '../../assets/icons/minus.jsx.svg'
+import IconPlus from '../../assets/icons/plus.jsx.svg'
+import IconUnlink from '../../assets/icons/unlink.jsx.svg'
 import mgmt from './mgmt'
 import React from 'react'
-import {observer} from 'mobx-react'
-import IconPlus from '../../assets/icons/plus.jsx.svg'
-import IconMinus from '../../assets/icons/minus.jsx.svg'
-import IconLink from '../../assets/icons/link.jsx.svg'
-import IconUnlink from '../../assets/icons/unlink.jsx.svg'
-import {untracked} from 'mobx'
 
 @resolver.define(({models}) => ({
   cms: models.global(Content).cms('content!editor', mgmt),
@@ -63,6 +63,13 @@ class Editor extends React.Component {
         content = {
           type,
           Component: expanded && Manager,
+          save() {
+            const provider = editor.content.providers.get(resolvedKey)
+            const value = provider.getManager().model.serialize()
+            const serialized = JSON.stringify(value)
+            provider.model.deserialize(value)
+            editor.content.update(resolvedKey, serialized)
+          },
         }
       }
       else if (type === 'FULL_CONTROL') {
@@ -71,12 +78,10 @@ class Editor extends React.Component {
           Component: expanded && observer(() => {
             return (
               <textarea
-                className={style.css('text_manager')}    
+                className={style.css('text_manager')}
                 value={editor.content.keys.get(resolvedKey)}
                 onChange={(event) => {
-                  const value = event.target.value
-                  editor.content.keys.set(resolvedKey, value)
-                  editor.content.addToQueue(resolvedKey, value)
+                  editor.content.update(resolvedKey, event.target.value)
                 }}
               ></textarea>
             )
@@ -112,7 +117,7 @@ class Editor extends React.Component {
                 {content.type === 'MANAGER' &&
                   <div className={style.css('manager_controls')}>
                     <span>{html('action.discard', 'Discard')}</span>
-                    <span>{html('action.save', 'Save')}</span>
+                    <span onClick={content.save}>{html('action.save', 'Save')}</span>
                   </div>
                 }
               </React.Fragment>

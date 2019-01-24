@@ -1,19 +1,20 @@
 import React from 'react'
 import {observer} from 'mobx-react'
+import {style} from 'frontful-style'
 
+@style(require('./Textbox.style'))
 @observer
 class Textbox extends React.Component {
   render() {
     const {value, onChange} = this.props.field || this.props
-    const {placeholder, title} = this.props
+    const {style, type} = this.props
     return (
       <div>
-        <div>{title}</div>
         <input
-          type="text"
-          value={value}
-          placeholder={placeholder}
+          className={style.css('textbox')}
           onChange={onChange}
+          type={type || 'text'}
+          value={value}
         />
       </div>
     )

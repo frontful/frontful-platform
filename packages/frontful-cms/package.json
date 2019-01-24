@@ -1,6 +1,6 @@
 {
   "name": "frontful-cms",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "private": true,
   "description": "Frontful CMS",
   "main": "./common/index.js",
@@ -27,7 +27,9 @@
     "cookie-parser": "^1.4.3",
     "deep-extend": "^0.6.0",
     "express": "^4.15.2",
+    "frontful-components": "4.x",
     "frontful-config": "4.x",
+    "frontful-field": "4.x",
     "frontful-model": "4.x",
     "frontful-resolver": "4.x",
     "frontful-store-sql": "4.x",

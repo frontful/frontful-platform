@@ -1,11 +1,11 @@
-import {model, formatter} from 'frontful-model'
-import Content from './Content'
 import {computed, action, untracked} from 'mobx'
+import {model, formatter} from 'frontful-model'
+import Content from '../../models/Content'
+import mgmtEditor from './mgmt'
 import objectPath from 'object-path'
-import React from 'react'
-import Manager from '../services/manager'
 
 @model.define(({models}) => ({
+  cms: models.global(Content).cms('content!editor', mgmtEditor),
   content: models.global(Content),
 }))
 @model({
@@ -18,6 +18,9 @@ class Editor {
     const json = {}
     const filter = this.filter.toLowerCase()
     for (let key of this.content.keys.keys()) {
+      if (!this.cms.model.showGlobal && key.indexOf('global.') === 0) {
+        continue
+      }
       if (this.content.providers.has(key) && !this.content.providers.get(key).mgmt) {
         continue
       }
@@ -36,14 +39,7 @@ class Editor {
     const managers = {}
     for (let [key, provider] of this.content.providers) {
       if (provider.mgmt) {
-        const model = new provider.mgmt.Model(provider.model.serialize(), this.context)
-        managers[key] = (
-          <Manager
-            model={model}
-            View={provider.mgmt.Component}
-            save={() => provider.model.deserialize(model.serialize())}
-          />
-        )
+        managers[key] = provider.getManager().element
       }
     }
     return managers

@@ -23,6 +23,17 @@ class Provider {
     }
   }
 
+  getManager() {
+    if (!this.$manager) {
+      const model = new this.mgmt.Model(this.model.serialize(), this.model.context)
+      this.$manager = this.$manager || {
+        model: model,
+        element: <this.mgmt.Component model={model} />
+      }
+    }
+    return this.$manager
+  }
+
   static getKey(prefix, key) {
     if (prefix) {
       key = `${prefix}.${key}`

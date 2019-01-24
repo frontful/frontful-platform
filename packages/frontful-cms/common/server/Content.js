@@ -1,10 +1,10 @@
-import contentMount from './mounts/content'
-import express from 'express'
-import cookieParser from 'cookie-parser'
-import bodyParser from 'body-parser'
-import mergeMaps from '../common/mergeMaps'
-import getPreferences from '../common/getPreferences'
 import {content as contentStore} from '../store'
+import bodyParser from 'body-parser'
+import contentMount from './mounts/content'
+import cookieParser from 'cookie-parser'
+import express from 'express'
+import getPreferences from '../common/getPreferences'
+import mergeMaps from '../common/mergeMaps'
 
 export default class Content {
   groups
