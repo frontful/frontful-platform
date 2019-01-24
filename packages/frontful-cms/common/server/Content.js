@@ -1,15 +1,35 @@
-import content from './mounts/content'
+import contentMount from './mounts/content'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import mergeMaps from '../common/mergeMaps'
 import getPreferences from '../common/getPreferences'
+import {content as contentStore} from '../store'
 
 export default class Content {
-  groups = new Map()
+  groups
+
+  load() {
+    return contentStore.load().then((entries) => {
+      if (this.groups) {
+        this.groups.clear()
+      }
+      this.groups = entries.reduce((groups, entrie) => {
+        let group = groups.get(entrie.group)
+        if (!group) {
+          group = new Map()
+          groups.set(entrie.group, group)
+        }
+        group.set(entrie.key, entrie.value)
+        return groups
+      }, new Map())
+      return this
+    })
+  }
   
   updateKeys(groups, updates) {
     updates = new Map(updates)
+    const dbUpdates = []
     const names = groups.split('|')
     for (let i = 0, l = names.length - 1; i <= l; i++) {
       const name = names[i]
@@ -28,10 +48,16 @@ export default class Content {
         }
         else {
           keys.set(key, value)
+          dbUpdates.push({
+            group: name,
+            key,
+            value,
+          })
           updates.delete(key)
         }
       }
     }
+    return contentStore.update(dbUpdates)
   }
 
   resolveKeys(arg) {
@@ -63,12 +89,24 @@ export default class Content {
     return '/api/content/script.js'
   }
 
+  loaded
+
+  isContentLoaded() {
+    if (!this.loaded) {
+      this.loaded = this.load()
+    }
+    return (req, res, next) => {
+      return this.loaded.then(() => next()).catch(next)
+    }
+  }
+
   mount() {
     const app = express()
+    
     app.use('/content', [
       bodyParser.json(),
       cookieParser(),
-      content(this),
+      contentMount(this),
     ])
     return app
   }

@@ -4,12 +4,16 @@ import getPreferences from '../../common/getPreferences'
 export default function content(content) {
   const app = express()
 
-  app.post('/', (req, res) => {
+  app.post('/', (req, res, next) => {
     const {text, config} = req.body
     const preferences = getPreferences(req)
-    content.updateKeys(preferences.text, text)
-    content.updateKeys(preferences.config, config)
-    res.json(true)
+    Promise.all([
+      content.updateKeys(preferences.text, text),
+      content.updateKeys(preferences.config, config),
+    ]).then(() => {
+      res.json(true)
+      return null
+    }).catch(next)
   })
 
   app.get('/', (req, res) => {

@@ -59,12 +59,12 @@ class Editor {
   })
 
   toggleLink = action((key) => {
-    if (this.content.keys.get(key) === ':resolve') {
-      this.content.keys.set(key, this.content.keys.get(this.content.resolveKey(key)))
+    let value = ':resolve'
+    if (this.content.keys.get(key) === value) {
+      value = this.content.keys.get(this.content.resolveKey(key))
     }
-    else {
-      this.content.keys.set(key, ':resolve')
-    }
+    this.content.keys.set(key, value)
+    this.content.addToQueue(key, value)
   })
 }
 

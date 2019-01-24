@@ -87,16 +87,20 @@ class Content {
 
   @action
   registerResolved(key, mgmt, defaultValue, globalCandidate) {
+    let isNew, value
     if (!this.keys.has(key)) {
-      const value = defaultValue || `"${key}"`
+      value = defaultValue || `"${key}"`
       this.keys.set(key, value)
-      this.addToQueue(key, value)
+      isNew = true
     }
     if (mgmt) {
       if (!this.providers.has(key)) {
         this.providers.set(key, new Provider(this, key, globalCandidate))
       }
       this.providers.get(key).initialise(mgmt !== 'BLANK' ? mgmt : null)
+    }
+    if (isNew) {
+      this.addToQueue(key, value)
     }
   }
 
