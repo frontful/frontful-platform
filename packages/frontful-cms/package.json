@@ -1,6 +1,6 @@
 {
   "name": "frontful-cms",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "private": true,
   "description": "Frontful CMS",
   "main": "./common/index.js",
@@ -20,8 +20,6 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-  },
-  "devDependencies": {
     "@frontful/viapro-api": "2.x",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
@@ -34,7 +32,6 @@
     "frontful-resolver": "4.x",
     "frontful-store-sql": "4.x",
     "frontful-style": "4.x",
-    "frontful-tools": "4.x",
     "frontful-utils": "4.x",
     "mobx-react": "^5.2.3",
     "mobx": "4.x",
@@ -42,5 +39,8 @@
     "react-dom": "16.x",
     "react": "16.x",
     "throttle-debounce": "^2.1.0"
+  },
+  "devDependencies": {
+    "frontful-tools": "4.x"
   }
 }
