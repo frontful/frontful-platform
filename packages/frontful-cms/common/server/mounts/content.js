@@ -16,7 +16,11 @@ export default function content(content) {
     }).catch(next)
   })
 
-  app.get('/', (req, res) => {
+  app.get('/reload', (req, res, next) => {
+    content.load().then(() => next()).catch(next)
+  })
+
+  app.get(['/', '/reload'], (req, res) => {
     const keys = content.resolveKeys(req)
     res.json([...keys])
   })

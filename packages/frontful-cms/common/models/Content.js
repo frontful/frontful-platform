@@ -15,6 +15,10 @@ import Provider from './Provider'
   preferences: formatter.ref(null, getDefaultPreferences()),
 })
 class Content {
+  static LINKED_VALUE = '@linked'
+  static GLOBAL_KEY = '$global'
+  static MODEL_KEY = '$model'
+
   constructor() {
     this.keys = this.$keys instanceof Map ? this.$keys : observable.map(this.$keys)
     this.providers = observable.map()
@@ -42,18 +46,9 @@ class Content {
     }
   }
 
-  resolveKey(key) {
-    key = key.replace(/!/gi, '.').replace(/^[.!]+/gi, '')
-    const value = this.keys.get(key)
-    if (value === ':resolve' && this.relations.has(key)) {
-      return this.resolveKey(this.relations.get(key))
-    }
-    return key
-  }
-
   cms(key, mgmt) {
     const content = this
-    key = Provider.getKey(key, Provider.sufix)
+    key = Provider.getKey(key, Content.MODEL_KEY)
     content.register(key, mgmt || 'BLANK', 'null')
     return observable.object({
       get html() {
@@ -92,16 +87,17 @@ class Content {
   }
 
   @action
-  registerResolved(key, mgmt, defaultValue, globalCandidate) {
+  registerResolved(key, mgmt, defaultValue, resolvableKey) {
     let isNew, value
     if (!this.keys.has(key)) {
+      console.log(key)
       value = defaultValue || `"${key}"`
       this.keys.set(key, value)
       isNew = true
     }
     if (mgmt) {
       if (!this.providers.has(key)) {
-        this.providers.set(key, new Provider(this, key, globalCandidate))
+        this.providers.set(key, new Provider(this, resolvableKey))
       }
       this.providers.get(key).initialise(mgmt !== 'BLANK' ? mgmt : null)
     }
@@ -110,26 +106,28 @@ class Content {
     }
   }
 
+  resolveKey(key) {
+    key = key.replace(/^[.!]+/gi, '')
+    const globalIndex = key.indexOf('!')
+    const resolvedKey = key.replace(/!/gi, '.')
+    const value = this.keys.get(resolvedKey)
+    if (value === Content.LINKED_VALUE && globalIndex !== -1) {
+      const globalKey = Content.GLOBAL_KEY + '.' + key.substring(globalIndex + 1)
+      return this.resolveKey(globalKey)
+    }
+    return resolvedKey
+  }
+
   @action
   register(key, mgmt, defaultValue) {
-    let globalCandidate = key
-    let globalIndex = globalCandidate.indexOf('!')
-    const resolvedKey = key.replace(/^[.!]+/gi, '').replace(/!/gi, '.')
-    let child = resolvedKey
-    while (globalIndex !== -1) {
-      const globalKey = 'global.' + globalCandidate.substring(globalIndex + 1)
-      const resolvedKey = globalKey.replace(/!/gi, '.')
-      globalCandidate = globalCandidate.substring(0, globalIndex) + '.' + globalCandidate.substring(globalIndex + 1, globalCandidate.length)
-      globalIndex = globalCandidate.indexOf('!')
-      if (globalIndex === -1) {
-        this.registerResolved(resolvedKey, mgmt, defaultValue, key)
-        defaultValue = ':resolve'
-      }
-      else {
-        this.registerResolved(resolvedKey, mgmt, ':resolve', key)
-      }
-      this.relations.set(child, resolvedKey)
-      child = resolvedKey
+    key = key.replace(/^[.!]+/gi, '')
+    const globalIndex = key.indexOf('!')
+    const resolvedKey = key.replace(/!/gi, '.')
+    if (globalIndex !== -1) {
+      const globalKey = Content.GLOBAL_KEY + '.' + key.substring(globalIndex + 1)
+      this.register(globalKey, mgmt, defaultValue)
+      this.relations.set(resolvedKey, globalKey)
+      defaultValue = Content.LINKED_VALUE
     }
     this.registerResolved(resolvedKey, mgmt, defaultValue, key)
   }

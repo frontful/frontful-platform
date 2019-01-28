@@ -18,7 +18,7 @@ class Editor {
     const json = {}
     const filter = this.filter.toLowerCase()
     for (let key of this.content.keys.keys()) {
-      if (!this.cms.model.showGlobal && key.indexOf('global.') === 0) {
+      if (!this.cms.model.showGlobal && key.indexOf(Content.GLOBAL_KEY + '.') === 0) {
         continue
       }
       if (this.content.providers.has(key) && !this.content.providers.get(key).mgmt) {
@@ -45,7 +45,7 @@ class Editor {
     return managers
   }
 
-  toggle = action((key) => {
+  toggleExpanded = action((key) => {
     if (this.expanded.has(key)) {
       this.expanded.delete(key)
     }
@@ -54,10 +54,10 @@ class Editor {
     }
   })
 
-  toggleLink = action((key) => {
-    let value = ':resolve'
+  toggleLink = action((key, resolvedKey) => {
+    let value = Content.LINKED_VALUE
     if (this.content.keys.get(key) === value) {
-      value = this.content.keys.get(this.content.resolveKey(key))
+      value = this.content.keys.get(resolvedKey)
     }
     this.content.keys.set(key, value)
     this.content.addToQueue(key, value)

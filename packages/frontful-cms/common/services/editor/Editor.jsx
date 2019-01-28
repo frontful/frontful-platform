@@ -38,7 +38,8 @@ class Editor extends React.Component {
     return keys.map((key) => {
       const contentKey = prefix ? `${prefix}.${key}` : key
       const isLinkable = editor.content.relations.has(contentKey)
-      const resolvedKey = untracked(() => editor.content.resolveKey(contentKey))
+      const isLinked = untracked(() => isLinkable && editor.content.keys.get(contentKey) === Content.LINKED_VALUE)
+      const resolvedKey = untracked(() => isLinked ? editor.content.resolveKey(editor.content.relations.get(contentKey)) : contentKey)
       let type
       if (!json[key].hasOwnProperty('$editor')) {
         type = 'KEY'
@@ -90,7 +91,7 @@ class Editor extends React.Component {
       }
       return !content ? null : (
         <div key={key} className={style.css('manager_wrapper')}>
-          <div onClick={() => editor.toggle(contentKey)} className={style.css('manager_icon', expanded)}>
+          <div onClick={() => editor.toggleExpanded(contentKey)} className={style.css('manager_icon', expanded)}>
             {expanded ? <IconMinus /> : <IconPlus />}
           </div>
           <div className={style.css('manager_content', content.type, expanded)}>
@@ -98,12 +99,12 @@ class Editor extends React.Component {
               {content.type !== 'KEY' &&
                 <div className={style.css('manager_accent')}></div>
               }
-              <div onClick={() => editor.toggle(contentKey)} className={style.css('manager_name')}>
+              <div onClick={() => editor.toggleExpanded(contentKey)} className={style.css('manager_name')}>
                 {key}
               </div>
               {expanded && isLinkable &&
-                <div onClick={() => {editor.toggleLink(contentKey); this.forceUpdate()}} className={style.css('link_manager')}>
-                  {untracked(() => editor.content.keys.get(contentKey) === ':resolve') ?
+                <div onClick={() => {editor.toggleLink(contentKey, resolvedKey); this.forceUpdate()}} className={style.css('link_manager')}>
+                  {untracked(() => editor.content.keys.get(contentKey) === Content.LINKED_VALUE) ?
                     <IconLink className={style.css('LINKED')}/> : <IconUnlink className={style.css('UNLINKED')}/>
                   }
                 </div>

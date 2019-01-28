@@ -1,13 +1,15 @@
 import {observer} from 'mobx-react'
 import React from 'react'
+import Content from './Content'
 
 class Provider {
-  static sufix = '$model'
-
-  constructor(content, key, globalCandidate) {
+  constructor(content, key) {
     this.content = content
-    this.key = key
-    this.prefix = globalCandidate.replace(Provider.sufix, '')
+    this.prefix = key.replace('.' + Content.MODEL_KEY, '')
+    if (key.length === this.prefix.length) {
+      throw new Error(`Provider model key must be \`${Content.MODEL_KEY}\``)
+    }
+    this.key = Provider.getKey(this.prefix, Content.MODEL_KEY)
   }
 
   initialise(mgmt) {
@@ -51,9 +53,10 @@ class Provider {
     @observer
     class Component extends React.Component {
       render() {
+        const value = provider.resolveValue(key)
         return (
-          <div className="cnt" dangerouslySetInnerHTML={{
-            __html: provider.resolveValue(key)
+          <div className="cnt" style={{color: value === Content.LINKED_VALUE ? 'red' : 'inherit'}} dangerouslySetInnerHTML={{
+            __html: value
           }} />
         )
       }
