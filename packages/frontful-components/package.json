@@ -20,7 +20,6 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-    "frontful-config": "4.x",
     "frontful-style": "4.x",
     "mobx-react": "^5.2.3",
     "mobx": "4.x",

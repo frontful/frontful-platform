@@ -82,28 +82,26 @@ export default class Content {
   }
 
   getScriptContent(req) {
-    return `window.frontful = window.frontful || {}; window.frontful.content = ${JSON.stringify([...this.resolveKeys(req)])};`
+    return `window.viapro = window.viapro || {}; window.viapro.content = ${JSON.stringify([...this.resolveKeys(req)])};`
   }
 
   get url() {
     return '/api/content/script.js'
   }
 
-  loaded
-
-  isContentLoaded() {
-    if (!this.loaded) {
-      this.loaded = this.load()
-    }
+  isLoaded() {
     return (req, res, next) => {
-      return this.loaded.then(() => next()).catch(next)
+      if (!this.loaded) {
+        this.loaded = this.loaded || this.load()
+      }
+      this.loaded.then(() => next()).catch(next)
     }
   }
 
   mount() {
     const app = express()
-    
     app.use('/content', [
+      this.isLoaded(),
       bodyParser.json(),
       cookieParser(),
       contentMount(this),

@@ -5,11 +5,12 @@ import Api from '@frontful/viapro-api'
 import extend from 'deep-extend'
 import getDefaultPreferences from '../common/getDefaultPreferences'
 import Provider from './Provider'
+import {cookies} from 'frontful-utils'
 
 @model.define(({models, config}) => ({
   $api: models.global(Api),
-  $cookies: config['frontful-cms'].cookies,
-  $keys: config['frontful-cms'].keys,
+  $content: config['frontful-cms'].content,
+  $req: config['frontful-cms'].req,
 }))
 @model({
   preferences: formatter.ref(null, getDefaultPreferences()),
@@ -20,26 +21,43 @@ class Content {
   static MODEL_KEY = '$model'
 
   constructor() {
-    this.keys = this.$keys instanceof Map ? this.$keys : observable.map(this.$keys)
+    this.cookies = cookies(this.$req)
     this.providers = observable.map()
     this.relations = observable.map()
     this.queue = {
       text: new Map(),
       config: new Map(),
     }
+    this.initialize()
     this.updatePreferences()
+  }
+
+  initialize() {
+    let keys
+    if (process.env.IS_BROWSER) {
+      if (window.viapro && window.viapro.content) {
+        keys = window.viapro.content
+      }
+      else {
+        keys = {}
+      }
+    }
+    else {
+      keys = this.$content.resolveKeys(this.$req)
+    }
+    this.keys = keys instanceof Map ? keys : observable.map(keys)
   }
 
   @action
   updatePreferences(preferences) {
-    if (preferences || !this.$cookies.get('FRONTFUL_CONTENT_PREFERENCES')) {
+    if (preferences || !this.cookies.get('FRONTFUL_CONTENT_PREFERENCES')) {
       const cookie = JSON.stringify(extend(getDefaultPreferences(), preferences))
-      this.$cookies.set('FRONTFUL_CONTENT_PREFERENCES', cookie, {
+      this.cookies.set('FRONTFUL_CONTENT_PREFERENCES', cookie, {
         path: '/',
       })
     }
     try {
-      this.preferences = JSON.parse(this.$cookies.get('FRONTFUL_CONTENT_PREFERENCES'))
+      this.preferences = JSON.parse(this.cookies.get('FRONTFUL_CONTENT_PREFERENCES'))
     }
     catch (error) {
       this.preferences = getDefaultPreferences()
