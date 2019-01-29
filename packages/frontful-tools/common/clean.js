@@ -5,6 +5,7 @@ const cleanList = [
   'build/',
   'node_modules/',
   'npm-debug.log',
+  'stats/',
   'yarn-error.log',
   'yarn.lock',
 ]
