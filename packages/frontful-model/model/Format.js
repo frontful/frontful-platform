@@ -60,7 +60,7 @@ class Format {
             value = observable.box(this.deserializeValue(this.format[key], state[key], context, () => object[key]), {deep: false})
             Object.defineProperty(object, key + '$', {
               value: value,
-              enumerable: true,
+              enumerable: false,
               configurable: false,
             })
           }

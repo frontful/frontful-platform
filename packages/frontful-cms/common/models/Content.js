@@ -90,7 +90,6 @@ class Content {
   registerResolved(key, mgmt, defaultValue, resolvableKey) {
     let isNew, value
     if (!this.keys.has(key)) {
-      console.log(key)
       value = defaultValue || `"${key}"`
       this.keys.set(key, value)
       isNew = true
