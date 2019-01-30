@@ -36,6 +36,7 @@
     "mobx-react": "^5.2.3",
     "mobx": "4.x",
     "object-path": "^0.11.4",
+    "re-resizable": "^4.11.0",
     "react-dom": "16.x",
     "react": "16.x",
     "throttle-debounce": "^2.1.0"

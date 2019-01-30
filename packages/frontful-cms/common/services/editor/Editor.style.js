@@ -32,10 +32,10 @@ export default ({css}) => {
   })
 
   css('.manager_icon', {
-    width: '30px',
+    width: '31px',
     flexGrow: '0',
     flexShrink: '0',
-    flexBasis: '30px',
+    flexBasis: '31px',
     textAlign: 'right',
     paddingRight: '5px',
     height: '25px',
