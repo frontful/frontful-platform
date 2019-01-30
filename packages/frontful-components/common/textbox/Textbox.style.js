@@ -1,7 +1,7 @@
 export default ({css}) => {
   css('.textbox', {
     backgroundColor: '#ffffff',
-    lineHeight: '28px',
+    lineHeight: '26px',
     width: '100%',
     height: '28px',
     padding: '0 5px',

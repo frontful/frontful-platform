@@ -50,8 +50,9 @@ class Content {
 
   @action
   updatePreferences(preferences) {
+    const old = this.preferences
     if (preferences || !this.cookies.get('FRONTFUL_CONTENT_PREFERENCES')) {
-      const cookie = JSON.stringify(extend(getDefaultPreferences(), preferences))
+      const cookie = JSON.stringify(extend(getDefaultPreferences(), this.preferences, preferences))
       this.cookies.set('FRONTFUL_CONTENT_PREFERENCES', cookie, {
         path: '/',
       })
@@ -62,6 +63,24 @@ class Content {
     catch (error) {
       this.preferences = getDefaultPreferences()
     }
+    const neu = this.preferences
+
+    if (old.text !== neu.text || old.config !== neu.config) {
+      this.reload()
+    }
+  }
+
+  @action
+  reload() {
+    if (process.env.IS_BROWSER) {
+      this.$api.get('/content',).then(action((entries) => {
+        this.keys.clear()
+        this.keys.merge(entries)
+        for (let provider of this.providers.values()) {
+          provider.reload()
+        }
+      }))
+    }
   }
 
   cms(key, mgmt) {
@@ -71,6 +90,9 @@ class Content {
     return observable.object({
       get html() {
         return content.providers.get(content.resolveKey(key)).html
+      },
+      get text() {
+        return content.providers.get(content.resolveKey(key)).text
       },
       get model() {
         return content.providers.get(content.resolveKey(key)).model

@@ -1,5 +1,5 @@
 import {resolver} from 'frontful-resolver'
-import {Textbox, Checkbox} from 'frontful-components'
+import {Textbox, Checkbox, Dropdown} from 'frontful-components'
 import Content from '../../../models/Content'
 import React from 'react'
 
@@ -10,15 +10,24 @@ import React from 'react'
   resolve(({model, cms}) => ({
     fields: model.fields,
     html: cms.html,
+    textGroups: model.textGroups.slice(),
+    configGroups: model.configGroups.slice(),
   }))
 })
 class Manager extends React.Component {
   render() {
-    const {fields, html} = this.props
+    const {fields, html, textGroups, configGroups} = this.props
     return (
       <React.Fragment>
+        <Dropdown field={fields.textGroup} html={html} options={textGroups.map((group) => ({
+          value: group,
+          key: `text_groups.${group}`,
+        }))} />
+        <Dropdown field={fields.configGroup} html={html} options={configGroups.map((group) => ({
+          value: group,
+          key: `config_groups.${group}`,
+        }))} />
         <Checkbox field={fields.showGlobal} text={html('show_global')} />
-        <Textbox field={fields.language} title={html('language')} />
       </React.Fragment>
     )
   }
