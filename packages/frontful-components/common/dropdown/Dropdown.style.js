@@ -1,4 +1,9 @@
-export default ({css}) => {
+import {style} from 'frontful-style'
+
+export default style(({css, context}) => {
+
+  const config = context['frontful']
+
   css('.dropdown_wrapper', {
     whiteSpace: 'nowrap',
   })
@@ -9,7 +14,7 @@ export default ({css}) => {
     width: '100%',
     height: '28px',
     padding: '0 5px',
-    border: '1px solid #B8B8B8',
+    border: `1px solid ${config.color.blue}`,
     borderRadius: '0',
     appearance: 'none',
     WebkitAppearance: 'none',
@@ -36,4 +41,4 @@ export default ({css}) => {
     cursor: 'pointer',
     fill: '#B8B8B8',
   })
-}
+})

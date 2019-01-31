@@ -11,6 +11,13 @@ function style(definition) {
 style.manager = manager
 
 style.bind = function (definition) {
+  if (definition._styleDecorated) {
+    return definition
+  }
+  else if (definition.default && definition.default._styleDecorated) {
+    return definition.default
+  }
+
   let style = manager.createStyle(definition)
 
   function decorator (Component) {
@@ -59,9 +66,10 @@ style.bind = function (definition) {
         if (super.componentWillUnmount) {
           super.componentWillUnmount.apply(this, arguments)
         }
-        setTimeout(() => {
-          this.style.dispose()
-        })
+        this.style.dispose()
+        // setTimeout(() => {
+        //   this.style.dispose()
+        // })
       }
     }
 
@@ -73,13 +81,20 @@ style.bind = function (definition) {
     return decorator
   }
 
+  decorator._styleDecorated = true
+
   return decorator
 }
 
 const reset = manager.reset
 
+const rerender = () => {
+  style.manager.rerender()
+}
+
 export {
   Style,
   reset,
+  rerender,
   style,
 }

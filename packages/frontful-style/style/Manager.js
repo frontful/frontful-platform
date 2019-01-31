@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 import {Style} from './Style'
-import {fork, isBrowser} from 'frontful-utils'
+import {fork, isBrowser, cookies} from 'frontful-utils'
 import {prefix} from 'inline-style-prefixer'
 
 const headElement = isBrowser() ? document.getElementsByTagName('head')[0] : null
@@ -13,8 +13,63 @@ class Manager {
 
     this.definitions = []
     this.styles = []
+    this.themes = []
 
     this.reset = this.reset.bind(this)
+
+    let themes
+    const self = this
+
+    Object.defineProperties(this.theme, {
+      add: {
+        value: this.addTheme,
+      },
+      themes: {
+        get() {
+          themes = themes || self.consolidateThemes()
+          return themes
+        }
+      }
+    })
+  }
+
+  consolidateThemes = () => {
+    const {names, contexts} = this.themes.reduce((result, theme) => {
+      if (!result.names.includes(theme.name)) {
+        result.names.push(theme.name)
+      }
+      if (!result.contexts.includes(theme.context)) {
+        result.contexts.push(theme.context)
+      }
+      return result
+    }, {names: [], contexts: []})
+    return names.reduce((names, name) => {
+      names[name] = contexts.reduce((contexts, context) => {
+        const contextTheme = this.themes.find((theme) => theme.name === name && theme.context === context)
+        if (contextTheme) {
+          contexts[context] = contextTheme.config
+        }
+        else {
+          const contextDefaultTheme = this.themes.find((theme) => theme.default && theme.context === context)
+          if (contextDefaultTheme) {
+            contexts[context] = contextDefaultTheme.config
+          }
+          else {
+            const contextFirstTheme = this.themes.find((theme) => theme.context === context)
+            contexts[context] = contextFirstTheme.config
+          }
+        }
+        return contexts
+      }, {})
+      return names
+    }, {})
+  }
+
+  theme = () => {
+  }
+
+  addTheme = (theme) => {
+    this.themes.push(theme)
   }
 
   get config() {
@@ -50,6 +105,19 @@ class Manager {
     this._extensions = merge({}, this._extensions, extensions)
   }
 
+  get themeManagers() {
+    this.__themeManagers = this.__themeManagers || Object.keys(this.theme.themes).map((name) => {
+      return fork(this, {
+        isTheme: true,
+        currentThemeName: name,
+        currentTheme: this.theme.themes[name],
+        definitions: [],
+        styles: [],
+      })
+    })
+    return this.__themeManagers
+  }
+
   createStyle = (definition) => {
     if (definition instanceof Style) {
       return definition
@@ -62,32 +130,72 @@ class Manager {
       throw new Error(`[frontful-style] Missing style definition`)
     }
 
-    let index = this.definitions.indexOf(definition)
-    if (index === -1) {
-      index = this.styles.length
-      const style = new Style(definition, index)
-      this.definitions.push(definition)
-      this.styles.push(style)
-    }
-    return this.styles[index]
+    return this.themeManagers.reduce((styles, themeManager) => {
+      let index = themeManager.definitions.indexOf(definition)
+      if (index === -1) {
+        index = themeManager.styles.length
+        const style = new Style(themeManager, definition, index)
+        themeManager.definitions.push(definition)
+        themeManager.styles.push(style)
+      }
+      styles[themeManager.currentThemeName] = themeManager.styles[index]
+      return styles
+    }, {})
+
+    // let index = this.definitions.indexOf(definition)
+    // if (index === -1) {
+    //   index = this.styles.length
+    //   const style = new Style(definition, index)
+    //   this.definitions.push(definition)
+    //   this.styles.push(style)
+    // }
+    // return this.styles[index]
   }
 
   reset() {
     this.definitions = []
     this.styles = []
+    this.themes = []
   }
 
-  getSession(/* userAgent */) {
-    return fork(this, {
-      // prefixer: new Prefixer({
-      //   userAgent: userAgent
-      // }),
+  getSession(req) {
+    const cookieManager = cookies(req)
+
+    let theme = cookieManager.get('FRONTFUL_STYLE_THEME')
+    if (!theme) {
+      cookieManager.set('FRONTFUL_STYLE_THEME', 'default', {
+        path: '/'
+      })
+      theme = cookieManager.get('FRONTFUL_STYLE_THEME')
+    }
+
+    const themeManager = this.themeManagers.find((manager) => manager.currentThemeName === theme)
+    if (!themeManager) {
+      cookieManager.remove('FRONTFUL_STYLE_THEME')
+      return this.getSession(req)
+    }
+
+    return fork(themeManager, {
       isSession: true,
       instances: [],
     })
+    // return fork(this, {
+    //   isSession: true,
+    //   instances: [],
+    // })
   }
 
-  getInstance(style, props) {
+  rerender() {
+    this.rerenderHandler()
+  }
+
+  setRerenderHandler(handler) {
+    this.rerenderHandler = handler
+  }
+
+  getInstance(styles, props) {
+    const style = styles[this.currentThemeName]
+
     if (!this.instances[style.index]) {
       this.instances[style.index] = []
     }

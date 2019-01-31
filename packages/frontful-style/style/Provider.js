@@ -44,6 +44,7 @@ class Provider {
       ...restDefinitionProps,
       theme: theme ? merge({}, manager.dependencies.theme, theme) : manager.dependencies.theme,
       css: this.css.bind(this),
+      context: this.getStyle().themeManager.currentTheme,
     }
 
     let extendedDefinitionProps = definitionProps

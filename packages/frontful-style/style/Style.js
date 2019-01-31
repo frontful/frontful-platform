@@ -3,9 +3,10 @@ import {difference, uniq} from 'lodash'
 import {fork} from 'frontful-utils'
 
 class Style {
-  constructor(definition, index) {
+  constructor(themeManager, definition, index) {
     this.definition = definition
     this.index = index
+    this.themeManager = themeManager
     this.provider = new Provider(this, this.definition)
     this.expose('theme', this.provider, (theme) => ({theme}))
   }
