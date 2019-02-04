@@ -4,6 +4,7 @@ export default ({css}) => {
     top: '0',
     bottom: '0',
     right: '0',
+    zIndex: '10000',
   })
 
   css('.panel', {
