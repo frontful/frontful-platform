@@ -25,8 +25,12 @@ class Models {
         registrar.register(key, Type)
       }
     }
-    else {
+    else if (args[0]) {
       [Type, data] = args
+      key = Type.identifier
+    }
+    else {
+      [,Type, data] = args
       key = Type.identifier
     }
 
