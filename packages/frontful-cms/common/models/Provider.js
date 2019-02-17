@@ -65,20 +65,32 @@ class Provider {
     class Component extends React.Component {
       render() {
         const value = provider.resolveValue(key)
-        return (
-          <div className="cnt" style={{
-            display: 'inline-block',
-            color: value === Content.LINKED_VALUE ? 'red' : 'inherit',
-          }} dangerouslySetInnerHTML={{
-            __html: value
-          }} />
-        )
+        if (value) {
+          return (
+            <div className="cnt" style={{
+              display: 'inline-block',
+              color: value === Content.LINKED_VALUE ? 'red' : 'inherit',
+            }} dangerouslySetInnerHTML={{
+              __html: value
+            }} />
+          )
+        }
+        else {
+          return null
+        }
       }
       UNSAFE_componentWillMount() {
         provider.content.register(key, null, defaultValue)
       }
     }
     return <Component />
+  }
+
+  text = (key, defaultValue) => {
+    key = Provider.getKey(this.prefix, key)
+    this.content.register(key, null, defaultValue)
+    const value = this.resolveValue(key)
+    return value
   }
 
   createElement = (element, props, key, defaultValue) => {

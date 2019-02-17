@@ -1,4 +1,4 @@
-import {action, observable} from 'mobx'
+import {action, observable, computed} from 'mobx'
 import {debounce} from 'throttle-debounce'
 import {model, formatter} from 'frontful-model'
 import Api from '@frontful/viapro-api'
@@ -24,6 +24,7 @@ class Content {
     this.cookies = cookies(this.$req)
     this.providers = observable.map()
     this.relations = observable.map()
+    this.hash = observable.box(Math.random() + 1)
     this.queue = {
       text: new Map(),
       config: new Map(),
@@ -92,15 +93,25 @@ class Content {
         return content.providers.get(content.resolveKey(key)).html
       },
       get text() {
-        return content.providers.get(content.resolveKey(key)).text
+        if (content.hash.get()) {
+          return content.providers.get(content.resolveKey(key)).text
+        }
+      },
+      get createElement() {
+        return content.providers.get(content.resolveKey(key)).createElement
       },
       get model() {
         return content.providers.get(content.resolveKey(key)).model
       }
+    }, {
+      text: computed({
+        equals: () => false
+      })
     })
   }
 
   uploadQueue = debounce(750, action(() => {
+    this.hash.set(Math.random() + 1)
     if (process.env.IS_BROWSER) {
       const update = {
         text: [...this.queue.text],
