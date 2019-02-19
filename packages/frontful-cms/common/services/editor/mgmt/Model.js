@@ -7,7 +7,7 @@ import Content from '../../../models/Content'
   content: models.global(Content),
 }))
 @model({
-  autoExpandDepth: 1,
+  autoExpandDepth: 0,
   showGlobal: true,
   textGroups: [
     'en',
