@@ -130,6 +130,24 @@ class Model {
   @action
   resolved() {
     this.status = 'resolved'
+    this.listeners.forEach((listener) => {
+      listener(this)
+    })
+  }
+
+  listeners = []
+
+  addListener(listener) {
+    if (this.listeners.indexOf(listener) === -1) {
+      this.listeners.push(listener)
+    }
+  }
+
+  removeListener(listener) {
+    const index = this.listeners.indexOf(listener)
+    if (index !== -1) {
+      this.listeners.splice(index, 1)
+    }
   }
 
   setup(queries) {

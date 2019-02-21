@@ -368,6 +368,9 @@ export class Resolver {
       )
 
       result.__resolver_resolved__ = true
+
+      // result.__component__ = Component
+
       return result
     }).catch((error) => {
       if (error instanceof Exceptions.Cancel) {

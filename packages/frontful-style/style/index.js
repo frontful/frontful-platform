@@ -73,6 +73,8 @@ style.bind = function (definition) {
       }
     }
 
+    // StyleComponent.__component__ = Component
+
     return Object.assign(StyleComponent, Component)
   }
 
