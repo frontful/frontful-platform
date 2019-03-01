@@ -1,5 +1,5 @@
 import {resolver} from 'frontful-resolver'
-import {Textbox, Checkbox, Dropdown} from 'frontful-components'
+import {Checkbox, Dropdown} from 'frontful-components'
 import Content from '../../../models/Content'
 import React from 'react'
 

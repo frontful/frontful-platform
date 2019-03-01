@@ -1,6 +1,6 @@
 {
   "name": "frontful-common",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "private": true,
   "description": "Common configuration provider for Frontful infrastructure",
   "scripts": {
