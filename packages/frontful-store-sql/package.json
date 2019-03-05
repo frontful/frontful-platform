@@ -1,6 +1,6 @@
 {
   "name": "frontful-store-sql",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "private": true,
   "description": "Frontful store for SQL",
   "main": "./common/index.js",
