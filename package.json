@@ -7,7 +7,6 @@
     "build": "yarn test && frontful-tools build \"packages/*/\"",
     "clean": "frontful-tools clean \"packages/*/\" && frontful-tools clean",
     "deploy": "yarn test && frontful-tools deploy \"packages/*/\"",
-    "install__": "frontful-tools install",
     "link:all": "frontful-tools link \"packages/*/\"",
     "test": "yarn test:eslint",
     "test:eslint": "eslint --ext .jsx,.js --max-warnings 0 .",

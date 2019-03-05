@@ -9,7 +9,6 @@ const cleanList = [
   'npm-debug.log',
   'stats/',
   'yarn-error.log',
-  'yarn.lock',
 ]
 
 export default function run(options) {

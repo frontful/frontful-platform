@@ -23,6 +23,7 @@ module.exports = class Build {
 
   run() {
     rimraf.sync(path.resolve(process.cwd(), 'build'))
+    rimraf.sync(path.resolve(process.cwd(), 'stats'))
     Promise.all([
       this.server.bundle.build(),
       this.browser.bundle.build(),

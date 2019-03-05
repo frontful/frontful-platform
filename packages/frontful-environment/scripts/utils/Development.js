@@ -11,6 +11,7 @@ const path = require('path')
 const printStats = require('../../utils/printStats')
 const requireFile = require('../../utils/requireFile')
 const server = require('../../utils/server')
+const rimraf = require('rimraf')
 
 process.env.PORT = config.server.port
 
@@ -18,6 +19,9 @@ const ignored = new RegExp(`(node_modules.*node_modules)|(node_modules/(?!(${com
 
 module.exports = class Development {
   constructor() {
+    rimraf.sync(path.resolve(process.cwd(), 'build'))
+    rimraf.sync(path.resolve(process.cwd(), 'stats'))
+
     this.fs = config.memory ? new MemoryFS() : null
 
     const getServerFilename = () => {
