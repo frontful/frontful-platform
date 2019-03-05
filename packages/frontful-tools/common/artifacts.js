@@ -7,10 +7,13 @@ import tmp from 'tmp'
 const artifactList = [
   'assets/',
   'build/',
-  'config/*.js',
+  'config/*.rsa',
+  'config/index.js',
+  'config/public.pem',
   'package.json',
   'yarn.lock',
   '.npmrc',
+  '.env',
 ]
 
 export default function artifacts({absolutePackagePath, absoluteBuildPath, relativePackagePath}) {
