@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 require('yargs').command({
     command: 'build [pattern]',
-    desc: 'Buid current or all [pattern] packages',
+    desc: 'Buid current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
       require('./build')({
@@ -12,18 +12,32 @@ require('yargs').command({
   })
   .command({
     command: 'deploy [pattern]',
-    desc: 'Deploy current or all [pattern] packages',
+    aliases: ['deploy-package', 'deploy-packages'],
+    desc: 'Deploy current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
-      require('./deploy')({
+      require('./deployPackage')({
         pattern: argv.pattern,
         transpile: argv.transpile,
+        path: 'build',
+      })
+    }
+  })
+  .command({
+    command: 'deploy-app [pattern]',
+    aliases: ['deploy-apps'],
+    desc: 'Deploy current or all [pattern] app(s)',
+    builder: (yargs) => yargs.default('pattern', './'),
+    handler: (argv) => {
+      require('./deployApp')({
+        pattern: argv.pattern,
+        path: 'artifacts',
       })
     }
   })
   .command({
     command: 'link [pattern]',
-    desc: 'Link current or all [pattern] packages',
+    desc: 'Link current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
       require('./link')({
@@ -34,7 +48,7 @@ require('yargs').command({
   })
   .command({
     command: 'unlink [pattern]',
-    desc: 'Unlink current or all [pattern] packages',
+    desc: 'Unlink current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
       require('./unlink')({
@@ -45,7 +59,7 @@ require('yargs').command({
   })
   .command({
     command: 'clean [pattern]',
-    desc: 'Clean current or all [pattern] packages',
+    desc: 'Clean current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
       require('./clean')({
@@ -56,7 +70,7 @@ require('yargs').command({
   })
   .command({
     command: 'install [pattern]',
-    desc: 'Post install script for current or all [pattern] packages',
+    desc: 'Post install script for current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
     handler: (argv) => {
       require('./install')({

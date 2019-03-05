@@ -6,6 +6,7 @@ export default function scope(options, predicate) {
     cwd: process.cwd(),
     pattern: null,
     transpile: true,
+    path: 'build',
   }, options)
   const packagePathList = glob.sync(options.pattern || './', {
     cwd: options.cwd,
@@ -15,7 +16,7 @@ export default function scope(options, predicate) {
     predicate({
       relativePackagePath: relativePackagePath,
       absolutePackagePath: path.resolve(options.cwd, relativePackagePath),
-      absoluteBuildPath: path.resolve(options.cwd, relativePackagePath, 'build'),
+      absoluteBuildPath: path.resolve(options.cwd, relativePackagePath, options.path),
     })
   })
 }
