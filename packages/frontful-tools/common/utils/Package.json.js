@@ -4,6 +4,8 @@ import fs from 'fs'
 export default class PackageJson {
   constructor(rootPath) {
     this.filePath = path.resolve(rootPath, 'package.json')
+    var content = fs.readFileSync(this.filePath, 'utf8')
+    Object.assign(this, JSON.parse(content))
   }
 
   lock() {

@@ -17,7 +17,6 @@ export default function deployApp(options) {
     deploy({
       absolutePackagePath,
       absoluteBuildPath,
-      relativePackagePath,
     })
     console.log()
   })

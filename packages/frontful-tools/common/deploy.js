@@ -3,7 +3,7 @@ import PackageJson from './utils/Package.json'
 import chalk from 'chalk'
 import {execSync} from 'child_process'
 
-export default function deploy({absolutePackagePath, absoluteBuildPath, relativePackagePath}) {
+export default function deploy({absolutePackagePath, absoluteBuildPath, isPackage}) {
   const hash = new Hash(absolutePackagePath, absoluteBuildPath)
   if (hash.changed()) {
     const hasChanges = execSync(`git diff-index --quiet HEAD -- || echo "modified"`, {
@@ -26,9 +26,8 @@ export default function deploy({absolutePackagePath, absoluteBuildPath, relative
       const version = new PackageJson(absolutePackagePath).bump()
       hash.update()
       console.log(chalk.green.bold(`Deployed as version ${version}`))
-      const packageName = relativePackagePath.replace('./', '').replace('packages/', '').replace(/\/$/gi, '')
-      const commitCommand = packageName ? `git add --all . && git commit -m "${packageName}@${version}"` : `git commit -a -m "v${version}"`
-      const tagCommand = packageName ? `git tag ${packageName}@${version}` : `git tag -a v${version} -m "v${version}"`
+      const commitCommand = isPackage ? `git add --all . && git commit -m "Publish ${buildPackageJson.name}@${version}"` : `git commit -a -m "Publish v${version}"`
+      const tagCommand = isPackage ? `git tag ${buildPackageJson.name}@${version}` : `git tag -a v${version} -m "v${version}"`
       execSync(`${commitCommand} && ${tagCommand}`, {
         cwd: absolutePackagePath,
         encoding: 'utf8',

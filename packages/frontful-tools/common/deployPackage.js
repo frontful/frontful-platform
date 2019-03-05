@@ -17,7 +17,7 @@ export default function run(options) {
     deploy({
       absolutePackagePath,
       absoluteBuildPath,
-      relativePackagePath,
+      isPackage: true,
     })
     console.log()
   })
