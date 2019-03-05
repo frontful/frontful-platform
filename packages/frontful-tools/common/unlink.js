@@ -9,10 +9,10 @@ export default function run(options) {
         encoding: 'utf8',
         stdio: 'ignore',
       })
-      console.log(`Unlinked ${relativePackagePath}`)
+      console.log(`[Unlinked] ${relativePackagePath}`)
     }
     catch (error) {
-      console.log(`Not linked ${relativePackagePath}`)
+      console.log(`[Not linked] ${relativePackagePath}`)
     }
   })
 }

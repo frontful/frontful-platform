@@ -56,6 +56,6 @@ export default function build(options) {
         fs.writeFileSync(filePath, compiled.code)
       })
     }
-    console.log(chalk.green.bold(`Package built (${relativePackagePath})`))
+    console.log(chalk.green(`[Package built] ${relativePackagePath}`))
   })
 }

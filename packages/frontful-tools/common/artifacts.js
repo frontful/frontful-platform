@@ -13,7 +13,7 @@ const artifactList = [
   '.npmrc',
 ]
 
-export default function artifacts({absolutePackagePath, absoluteBuildPath}) {
+export default function artifacts({absolutePackagePath, absoluteBuildPath, relativePackagePath}) {
   const temp = tmp.dirSync({unsafeCleanup: true})
   const tempPath = temp.name
   fs.removeSync(absoluteBuildPath)
@@ -31,5 +31,5 @@ export default function artifacts({absolutePackagePath, absoluteBuildPath}) {
   })
   fs.copySync(tempPath, absoluteBuildPath)
   temp.removeCallback()
-  console.log(chalk.green.bold(`App artifacts (${absoluteBuildPath.replace(absolutePackagePath, '')})`))
+  console.log(chalk.green(`[Artifacts generated] ${relativePackagePath}`))
 }
