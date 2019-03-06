@@ -30,8 +30,6 @@ module.exports = function (handler, options) {
 
   const server = http.createServer(cumulativeHandler)
 
-  process.env.PORT = process.env.PORT || 80
-
   const listener = server.listen(process.env.PORT, (error) => {
     console[error ? 'error' : 'log'](error || chalk.green(`Server started on port ${process.env.PORT}`))
   })

@@ -45,7 +45,10 @@ module.exports = class Build {
       }).assetsByChunkName)
 
       fs.writeFileSync(serverIndexPath, `
+        require('dotenv').config();
         process.env.NODE_ENV = 'production';
+        process.env.PORT = process.env.PORT || 80;
+        process.env.HOST = process.env.HOST || "http://localhost:" + process.env.PORT;
         require('frontful-config');
         require('frontful-environment/utils/bundle')(${assetsByChunkName});
         var server = require('frontful-environment/utils/server');

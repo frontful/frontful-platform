@@ -37,7 +37,7 @@ Conceptually `frontful-environment` is similar to [`react-scripts`](https://gith
 `frontful-environment` consists of two aspects
   - **Script** - Script is installed under `node_modules/.bin` as `frontful-environment` and provides two variation
     - `frontful-environment start` - Starts application for development with live cold reload and [package development assist](https://github.com/frontful/frontful-common#package-development-assist). _Utilities_ are working in `NODE_ENV=development` mode e.g. _cold reload state persistence_ and _error handling_. Babel and Webpack are building server and browser bundles (in memory by default), these bundles get rebuilt and reloaded when code is changed.
-    - `frontful-environment build` - Builds application for `production` and outputs optimized server and browser bundles to `./build` folder. To run production build execute `PORT=8000 node ./build/server`. Babel and Webpack are working only during build process, when application is run Babel and Webpack are not triggered. Certain _utilities_ are disabled or working in `NODE_ENV=production` mode e.g. _cold reload state persistence_ and _error handling_
+    - `frontful-environment build` - Builds application for `production` and outputs optimized server and browser bundles to `./build` folder. To run production build execute `PORT=8080 node ./build/server`. Babel and Webpack are working only during build process, when application is run Babel and Webpack are not triggered. Certain _utilities_ are disabled or working in `NODE_ENV=production` mode e.g. _cold reload state persistence_ and _error handling_
   - **Utilities** - Provides utilities to access and use certain aspects of `frontful-environment`. To use these utilities `import environment from 'frontful-environment'`.
     - `environment.assets` - Get bundle absolute mount path e.g. `js.main`, `js.vendor`, `css.main`, `css.vendor`.
     - `environment.coldreload` - Utilities for setting `serializer` and `deserializer` handlers and accessing persisted `state`
@@ -85,7 +85,7 @@ export default app
 
 To start application for `development` run `yarn start` or `npm run start`.  
 To build application for `production` run `yarn build` or `npm run build`.  
-To start application for production after build run `PORT=8000 node ./build/server`.
+To start application for production after build run `PORT=8080 node ./build/server`.
 
 For extended integration, e.g. enabling cold reload state persistence or getting mounted path of built assets and bundles, read section on [Utilities](https://github.com/frontful/frontful-environment#utilities)
 

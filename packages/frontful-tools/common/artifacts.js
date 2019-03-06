@@ -8,6 +8,7 @@ const artifactList = [
   'assets/',
   'build/',
   'config/*.rsa',
+  'config/*.sha1',
   'config/index.js',
   'config/public.pem',
   'package.json',

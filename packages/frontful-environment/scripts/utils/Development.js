@@ -13,7 +13,8 @@ const requireFile = require('../../utils/requireFile')
 const server = require('../../utils/server')
 const rimraf = require('rimraf')
 
-process.env.PORT = config.server.port
+process.env.PORT = process.env.PORT || config.server.port || 8080
+process.env.HOST = process.env.HOST || `http://localhost:${process.env.PORT}`
 
 const ignored = new RegExp(`(node_modules.*node_modules)|(node_modules/(?!(${commonConfig.packages.join('|')})/))`)
 

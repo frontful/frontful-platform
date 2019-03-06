@@ -3,7 +3,7 @@ module.exports = {
   server: {
     index: './src/server/index.js',
     assets: true,
-    port: 8000,
+    port: 8080,
     webpack: {
       // Options that will be passed to `./provider/webpack/server`
       options: null,

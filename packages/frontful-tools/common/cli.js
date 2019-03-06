@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
-require('yargs').command({
+require('yargs')
+  .command({
     command: 'build [pattern]',
     desc: 'Buid current or all [pattern] package(s)',
     builder: (yargs) => yargs.default('pattern', './'),
@@ -7,6 +8,17 @@ require('yargs').command({
       require('./build')({
         pattern: argv.pattern,
         transpile: argv.transpile,
+      })
+    }
+  })
+  .command({
+    command: 'build-app [pattern]',
+    desc: 'Buid current or all [pattern] app(s)',
+    builder: (yargs) => yargs.default('pattern', './'),
+    handler: (argv) => {
+      require('./buildApp')({
+        pattern: argv.pattern,
+        path: 'artifacts',
       })
     }
   })
