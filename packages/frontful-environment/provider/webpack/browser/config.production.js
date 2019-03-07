@@ -1,7 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const findWorkspaceRoot = require('find-yarn-workspace-root')
-const hash = require('../utils/hash')
+// const hash = require('../utils/hash')
 const path = require('path')
 const rulesAssets = require('../utils/rules.assets')
 const rulesJavascript = require('../utils/rules.javascript')
@@ -40,7 +40,7 @@ module.exports = function provider(options) {
     },
     output: {
       path: path.resolve(cwd, './build/browser/assets/'),
-      filename: `${hash}.[name].js`,
+      filename: `[contenthash].[name].js`,
       publicPath: '/assets/',
     },
     optimization: {
@@ -65,7 +65,7 @@ module.exports = function provider(options) {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: `${hash}.[name].css`,
+        filename: `[contenthash].[name].css`,
       }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.DefinePlugin({
