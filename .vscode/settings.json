@@ -3,5 +3,8 @@
   "editor.tabSize": 2,
   "files.insertFinalNewline": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "npm.enableScriptExplorer": true,
+  "npm.packageManager": "yarn",
+  "npm.bin": "yarn"
 }
