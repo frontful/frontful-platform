@@ -36,7 +36,7 @@
     "glob": "^7.1.3",
     "rimraf": "2.x",
     "tmp": "^0.0.33",
-    "yargs": "^12.0.5"
+    "yargs": "^13.2.2"
   },
   "devDependencies": {
     "frontful-tools": "4.x"
