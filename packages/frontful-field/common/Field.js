@@ -23,6 +23,13 @@ class Field {
   set value(value) {
     this.provider.set(value)
   }
+
+  toProps() {
+    return {
+      onChange: this.onChange,
+      value: this.value,
+    }
+  }
 }
 
 export default Field

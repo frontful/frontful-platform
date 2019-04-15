@@ -4,9 +4,9 @@ module.exports = function() {
       test: /(\.(png|jpe?g|gif|ico)$)|(^((?!\.jsx?).)*\.svg$)/i,
       loader: 'url-loader?limit=1024',
     },
-    {
-      test: /\.json$/,
-      loader: 'json-loader',
-    },
+    // {
+    //   test: /\.json$/,
+    //   loader: 'json-loader',
+    // },
   ]
 }

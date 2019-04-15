@@ -1,15 +1,15 @@
 import express from 'express'
 import getPreferences from '../../common/getPreferences'
 
-export default function content(content) {
+export default function content(server) {
   const app = express()
 
   app.post('/', (req, res, next) => {
     const {text, config} = req.body
     const preferences = getPreferences(req)
     Promise.all([
-      content.updateKeys(preferences.text, text),
-      content.updateKeys(preferences.config, config),
+      server.updateKeys(preferences.text, text),
+      server.updateKeys(preferences.config, config),
     ]).then(() => {
       res.json(true)
       return null
@@ -17,16 +17,16 @@ export default function content(content) {
   })
 
   app.get('/reload', (req, res, next) => {
-    content.load().then(() => next()).catch(next)
+    server.load().then(() => next()).catch(next)
   })
 
   app.get(['/', '/reload'], (req, res) => {
-    const keys = content.resolveKeys(req)
+    const keys = server.resolveKeys(req)
     res.json([...keys])
   })
 
   app.get('/script.js', (req, res) => {
-    res.type('application/javascript').send(content.getScriptContent(req))
+    res.type('application/javascript').send(server.client(req).getScriptContent())
   })
 
   return app

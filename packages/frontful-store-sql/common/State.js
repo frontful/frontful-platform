@@ -26,7 +26,7 @@ export default class State {
     const state = {}
     for (let key in this) {
       if (this.hasOwnProperty(key)) {
-        if (typeof this[key] !== 'undefined') {
+        if (typeof this[key] !== 'undefined' && key !== 'store') {
           state[key] = this[key]
         }
       }

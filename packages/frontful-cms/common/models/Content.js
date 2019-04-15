@@ -1,16 +1,17 @@
 import {action, observable, computed} from 'mobx'
 import {debounce} from 'throttle-debounce'
 import {model, formatter} from 'frontful-model'
-import Api from '@frontful/viapro-api'
+import Api from './Api'
 import extend from 'deep-extend'
 import getDefaultPreferences from '../common/getDefaultPreferences'
 import Provider from './Provider'
 import {cookies} from 'frontful-utils'
 
+const GLOBAL_NAME = 'frontful-cms'
+
 @model.define(({models, config}) => ({
   $api: models.global(Api),
-  $content: config['frontful-cms'].content,
-  $req: config['frontful-cms'].req,
+  $client: config[GLOBAL_NAME],
 }))
 @model({
   preferences: formatter.ref(null, getDefaultPreferences()),
@@ -21,7 +22,7 @@ class Content {
   static MODEL_KEY = '$model'
 
   constructor() {
-    this.cookies = cookies(this.$req)
+    this.cookies = cookies(this.$client.req)
     this.providers = observable.map()
     this.relations = observable.map()
     this.hash = observable.box(Math.random() + 1)
@@ -35,16 +36,11 @@ class Content {
 
   initialize() {
     let keys
-    if (process.env.IS_BROWSER) {
-      if (window.viapro && window.viapro.content) {
-        keys = window.viapro.content
-      }
-      else {
-        keys = {}
-      }
+    if (this.$client.server) {
+      keys = this.$client.server.resolveKeys(this.$client.req)
     }
     else {
-      keys = this.$content.resolveKeys(this.$req)
+      keys = this.$client.params.keys
     }
     this.keys = keys instanceof Map ? keys : observable.map(keys)
   }

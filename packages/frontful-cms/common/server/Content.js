@@ -1,16 +1,19 @@
-import {content as contentStore} from '../store'
-import bodyParser from 'body-parser'
-import contentMount from './mounts/content'
-import cookieParser from 'cookie-parser'
-import express from 'express'
+import ContentModel from '../store/models/Content'
 import getPreferences from '../common/getPreferences'
 import mergeMaps from '../common/mergeMaps'
+import Provider from '@frontful/ape-host/common/server/Provider'
+import Client from '../client/Content'
 
-export default class Content {
-  groups
+const GLOBAL_NAME = 'frontful-cms'
+
+export default class Content extends Provider {
+  groups = null
 
   load() {
-    return contentStore.load().then((entries) => {
+    this.models = {
+      content: new ContentModel(this.store),
+    }
+    return this.models.content.load().then((entries) => {
       if (this.groups) {
         this.groups.clear()
       }
@@ -57,7 +60,7 @@ export default class Content {
         }
       }
     }
-    return contentStore.update(dbUpdates)
+    return this.models.content.update(dbUpdates)
   }
 
   resolveKeys(arg) {
@@ -77,35 +80,20 @@ export default class Content {
     }
   }
 
-  getScript(req) {
-    return `<script>${this.getScriptContent(req)}</script>`
+  client(req) {
+    req.res.locals[GLOBAL_NAME] = req.res.locals[GLOBAL_NAME] || new Client(req, null, this)
+    return req.res.locals[GLOBAL_NAME]
   }
 
-  getScriptContent(req) {
-    return `window.viapro = window.viapro || {}; window.viapro.content = ${JSON.stringify([...this.resolveKeys(req)])};`
-  }
-
-  get url() {
-    return '/api/content/script.js'
-  }
-
-  isLoaded() {
-    return (req, res, next) => {
-      if (!this.loaded) {
-        this.loaded = this.loaded || this.load()
-      }
-      this.loaded.then(() => next()).catch(next)
-    }
-  }
-
-  mount() {
-    const app = express()
-    app.use('/content', [
-      this.isLoaded(),
-      bodyParser.json(),
-      cookieParser(),
-      contentMount(this),
+  mount(...args) {
+    const router = super.mount(...args)
+    router.use((req, res, next) => {
+      this.client(req)
+      next()
+    })
+    router.use('/api/content', [
+      require('./mounts/content')(this),
     ])
-    return app
+    return router
   }
 }

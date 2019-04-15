@@ -60,10 +60,12 @@ class Models {
   deserialize(data) {
     this.data = Object.assign({}, data)
     registrar.keys.forEach((key) => {
-      const model = new registrar.Types[key]('deferred')
-      this.models.set(key, model)
-      model.initializer(data[key], this.context)
-      delete this.data[key]
+      if (this.data[key]) {
+        const model = new registrar.Types[key]('deferred')
+        this.models.set(key, model)
+        model.initializer(data[key], this.context)
+        delete this.data[key]
+      }
     })
   }
 

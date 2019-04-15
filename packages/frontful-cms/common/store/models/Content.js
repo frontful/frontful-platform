@@ -1,6 +1,17 @@
-import store from '../store'
-
 export default class Content {
+  constructor(store) {
+    this.store = store
+  }
+
+  async load() {
+    return this.store.connection.query(`
+      SELECT [group], [key], [value]
+      FROM frontful.[content]
+    `, {
+      type: this.store.connection.QueryTypes.SELECT,
+    })
+  }
+
   async update(entries) {
     if (entries && entries.length) {
       const replacements = []
@@ -8,7 +19,7 @@ export default class Content {
         replacements.push(value)
         return '?'
       }
-      return store.connection.query(`
+      return this.store.connection.query(`
         DECLARE @updated TABLE (
           [group] varchar(50) NOT NULL,
           [key] varchar(150) NOT NULL,
@@ -36,17 +47,8 @@ export default class Content {
         WHERE frontful.[content].[key] IS NULL
       `, {
         replacements,
-        type: store.connection.QueryTypes.SELECT,
+        type: this.store.connection.QueryTypes.SELECT,
       }).then(() => null)
     }
-  }
-
-  load() {
-    return store.connection.query(`
-      SELECT [group], [key], [value]
-      FROM frontful.[content]
-    `, {
-      type: store.connection.QueryTypes.SELECT,
-    })
   }
 }

@@ -20,7 +20,7 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-    "@frontful/viapro-api": "2.x",
+    "@frontful/ape-host": "1.x",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "deep-extend": "^0.6.0",
@@ -29,6 +29,7 @@
     "frontful-config": "4.x",
     "frontful-field": "4.x",
     "frontful-model": "4.x",
+    "frontful-dao": "4.x",
     "frontful-resolver": "4.x",
     "frontful-store-sql": "4.x",
     "frontful-style": "4.x",
