@@ -53,6 +53,10 @@ const prototype = {
     }
   },
 
+  // get url() {
+  //   return this.__url
+  // },
+
   'initialize.mapping'(mapping, name = '') {
     const keys = Object.keys(mapping)
     return keys.reduce((result, key) => {
