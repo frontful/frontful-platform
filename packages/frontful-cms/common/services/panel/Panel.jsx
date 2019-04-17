@@ -8,7 +8,7 @@ import mgmt from './mgmt'
 import PanelModel from './Panel.model'
 
 @resolver.define(({models}) => ({
-  cms: models.global(Content).cms('content!panel', mgmt),
+  cms: models.global(Content).cms('cms.panel', mgmt),
   panel: models.global(PanelModel),
 }))
 @resolver((resolve) => {

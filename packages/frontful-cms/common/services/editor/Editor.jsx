@@ -12,13 +12,12 @@ import mgmt from './mgmt'
 import React from 'react'
 
 @resolver.define(({models}) => ({
-  cms: models.global(Content).cms('content!editor', mgmt),
+  cms: models.global(Content).cms('cms.editor', mgmt),
   editor: models.global(EditorModel)
 }))
 @resolver((resolve) => {
   resolve(({cms, editor}) => ({
     editor,
-    html: cms.html,
     config: cms.model,
     managers: resolve.value(editor.managers),
   }))
@@ -27,7 +26,7 @@ import React from 'react'
 @observer
 class Editor extends React.Component {
   renderKeys(json, prefix, depth = 1) {
-    const {managers, style, html, config, editor} = this.props
+    const {managers, style, config, editor} = this.props
     const keys = Object.keys(json).sort((a, b) => {
       if (!json[a].hasOwnProperty('$editor')) a = '%' + a
       if (!json[b].hasOwnProperty('$editor')) b = '%' + b
@@ -117,8 +116,8 @@ class Editor extends React.Component {
                 </div>
                 {content.type === 'MANAGER' &&
                   <div className={style.css('manager_controls')}>
-                    <span>{html('action.discard', 'Discard')}</span>
-                    <span onClick={content.save}>{html('action.save', 'Save')}</span>
+                    <span>{'Discard'}</span>
+                    <span onClick={content.save}>{'Save'}</span>
                   </div>
                 }
               </React.Fragment>

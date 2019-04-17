@@ -4,7 +4,7 @@ import Content from '../../../models/Content'
 import React from 'react'
 
 @resolver.define(({models}) => ({
-  cms: models.global(Content).cms('content!editor'),
+  cms: models.global(Content).cms('cms.editor'),
 }))
 @resolver((resolve) => {
   resolve(({model, cms}) => ({
@@ -21,13 +21,13 @@ class Manager extends React.Component {
       <React.Fragment>
         <Dropdown field={fields.textGroup} html={html} options={textGroups.map((group) => ({
           value: group,
-          key: `text_groups.${group}`,
+          text: group,
         }))} />
         <Dropdown field={fields.configGroup} html={html} options={configGroups.map((group) => ({
           value: group,
-          key: `config_groups.${group}`,
+          text: group,
         }))} />
-        <Checkbox field={fields.showGlobal} text={html('show_global')} />
+        <Checkbox field={fields.showGlobal} text={'Show $global'} />
       </React.Fragment>
     )
   }

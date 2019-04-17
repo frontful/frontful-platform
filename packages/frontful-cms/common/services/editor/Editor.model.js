@@ -5,7 +5,7 @@ import mgmtEditor from './mgmt'
 import objectPath from 'object-path'
 
 @model.define(({models}) => ({
-  cms: models.global(Content).cms('content!editor', mgmtEditor),
+  cms: models.global(Content).cms('cms.editor', mgmtEditor),
   content: models.global(Content),
 }))
 @model({
