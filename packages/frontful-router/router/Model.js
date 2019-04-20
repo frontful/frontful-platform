@@ -221,7 +221,7 @@ class Model {
     this.status = 'resolved'
 
     if (isBrowser()) {
-      const createHistory = require('history/createBrowserHistory').default
+      const createHistory = require('history').createBrowserHistory
 
       this.history = createHistory()
       this.history.listen(action((location) => {
