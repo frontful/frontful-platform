@@ -13,7 +13,8 @@ class Link extends React.PureComponent {
   }
 
   render() {
-    return <a onClick={this.onClick} {...this.props}></a>
+    const {onClick, ...rest} = this.props
+    return <a onClick={onClick || this.onClick} {...rest}></a>
   }
 }
 
