@@ -104,7 +104,13 @@ export class Resolver {
         return Promisable.resolve(resolverResult[key]).then((value) => {
           let processedValue = null
 
-          if (React.isValidElement(value)) {
+          if (value && value.__resolver__) {
+              value.__resolver__.__DONT_EXECUTE__ = false
+              item.resolvers.push(value.__resolver__)
+              // console.log('Restore resolver')
+              processedValue = value
+          }
+          else if (React.isValidElement(value)) {
             if (value.type.__resolver_resolved__) {
               processedValue = value
             }
@@ -175,6 +181,12 @@ export class Resolver {
     execution.promise.isProcessing = true
 
     const resolveProps = () => {
+      // if (this.__DONT_EXECUTE__ === false) {
+      //   console.log('RESOTRED')
+      // }
+      if (this.__DONT_EXECUTE__) {
+        return
+      }
       try {
         return item.resolver({
           ...this.definerObject,
@@ -189,17 +201,27 @@ export class Resolver {
     }
 
     const reactToProps = (resolverResult) => {
+      if (this.__DONT_EXECUTE__) {
+        return
+      }
+
       const processing = item.process && item.process.promise && item.process.promise.isProcessing
       if (processing) {
         item.process.canceled = true
       }
 
       if (item.resolvers && item.resolvers.length) {
-        item.resolvers.forEach((resolver) => {
-          resolver.dispose(true)
+        // item.resolvers.forEach((resolver) => {
+        //   resolver.dispose(true)
+        // })
+        item.notDisposedResolvers = (item.notDisposedResolvers || []).concat(item.resolvers)
+        item.notDisposedResolvers.forEach((resolver) => {
+          resolver.__DONT_EXECUTE__ = true
         })
+        // console.log(`Not disposed count: ${item.notDisposedResolvers.length}`)
         item.resolvers = []
       }
+
       this.disposeResolversTree([item.next])
 
       item.process = {
@@ -213,6 +235,15 @@ export class Resolver {
         item.resolvers = []
         return this.resolveReturnValues(resolverResult, item, boundProcess)
       }).then(() => {
+        if (item.notDisposedResolvers && item.notDisposedResolvers.length) {
+          item.notDisposedResolvers.forEach((notDisposedResolver) => {
+            if (item.resolvers.indexOf(notDisposedResolver) === -1) {
+              notDisposedResolver.dispose(true)
+            }
+          })
+          item.notDisposedResolvers = []
+        }
+
         if (execution.promise.isProcessing) {
           execution.resolve()
           execution.promise.isProcessing = false
@@ -339,6 +370,13 @@ export class Resolver {
           })
           item.resolvers = []
         }
+
+        if (item.notDisposedResolvers) {
+          item.notDisposedResolvers.forEach((notDisposedResolver) => {
+            notDisposedResolver.dispose(full)
+          })
+          item.notDisposedResolvers = []
+        }
       }
     })
   }
@@ -368,6 +406,7 @@ export class Resolver {
       )
 
       result.__resolver_resolved__ = true
+      result.__resolver__ = this
 
       // result.__component__ = Component
 

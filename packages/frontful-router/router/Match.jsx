@@ -1,6 +1,7 @@
 import React from 'react'
 import pathToRegexp from 'path-to-regexp'
 import {resolver} from 'frontful-resolver'
+import {Model} from '.'
 
 function test(pattern, path) {
   if (pattern) {
@@ -25,7 +26,7 @@ function match(element, path, setParams) {
     if (setParams) {
       setParams(matched)
     }
-    return [<Item {...rest}/>]
+    return [<Item sourceElement={element} {...rest}/>]
   }
   else {
     let {children, ...rest} = element.props
@@ -39,7 +40,7 @@ function match(element, path, setParams) {
             return result
           }
           else {
-            return [<Item {...rest}/>].concat(result)
+            return [<Item sourceElement={element} {...rest}/>].concat(result)
           }
         }
       }
@@ -48,10 +49,37 @@ function match(element, path, setParams) {
   }
 }
 
+@resolver.define(({models}) => ({
+  router: models.global(Model)
+}))
 @resolver((resolve) => {
-  resolve(({children, path, setParams}) => {
-    const items = resolve.value(match(<void>{children}</void>, path, setParams))
-    return {items}
+  resolve(({children, router: {cache, path, setParams}}) => {
+    let __match = match(<void>{children}</void>, path, setParams)
+    let __cachedMatch = __match
+    if (cache.elementCache) {
+      __cachedMatch = __match.map((element) => {
+        const sourceElement = element.props.sourceElement
+        if (cache.elementCache.has(sourceElement)) {
+          // console.log('USE CACHED')
+          return cache.elementCache.get(sourceElement)
+        }
+        else {
+          return element
+        }
+      })
+    }
+    const items = resolve.value(__cachedMatch)
+    return {
+      elements: __match.map((element) => element.props.sourceElement),
+      items,
+      updateCache(elements, items) {
+        cache.elementCache = new Map()
+        elements.forEach((element, idx) => {
+          cache.elementCache.set(element, items[idx])
+        })
+        // console.log(cache.elementCache)
+      },
+    }
   })
 })
 class Match extends React.PureComponent {
@@ -63,7 +91,8 @@ class Match extends React.PureComponent {
       let [Item, ...rest] = items
       let elementProps = {}
       if (React.isValidElement(Item)) {
-        elementProps = Item.props
+        elementProps = {...Item.props}
+        delete elementProps.sourceElement
         Item = Item.type
       }
       return (
@@ -75,7 +104,9 @@ class Match extends React.PureComponent {
   }
 
   render() {
-    const {items, ...rest} = this.props
+    const {elements, items, updateCache, ...rest} = this.props
+    // console.log(items)
+    updateCache(elements, items)
     return this.hierarchify(items, rest)
   }
 }

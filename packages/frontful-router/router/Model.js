@@ -16,17 +16,22 @@ import {isBrowser} from 'frontful-utils'
   prevPath: null,
   status: null,
   injectionRegister: formatter.map(),
+  params: null,
 })
 class Model {
   constructor() {
     this.initialize()
+    this.cache = {}
     this['push'] = this.execute.bind(this, 'push')
     this['replace'] = this.execute.bind(this, 'replace')
     this['pop'] = this.execute.bind(this, 'pop')
   }
 
   setParams = (params) => {
-    this.params = params
+    this.params = {
+      ...params,
+      path: this.path,
+    }
   }
 
   @action
@@ -217,6 +222,7 @@ class Model {
   @action
   initialize() {
     this.path = this.getPath()
+    this.params = {}
     this.prevPath = '/'
     this.status = 'resolved'
 

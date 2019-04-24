@@ -11,11 +11,10 @@ import {resolver} from 'frontful-resolver'
 @resolver((resolve) => {
   resolve.untracked(({router, queries}) => router.setup(queries))
   resolve(
-    ({router, children}) => ({
-      Match:
-        <Match path={router.path} setParams={router.setParams}>
-          {children}
-        </Match>,
+    ({children}) => ({
+      Match: <Match>{children}</Match>,
+    }),
+    ({router}) => ({
       context: {
         path: router.path,
         push: router.push,
@@ -23,8 +22,7 @@ import {resolver} from 'frontful-resolver'
     }),
     ({router}) => router.resolved(),
     () => ({
-      Extras:
-        <Extras />,
+      Extras: <Extras />,
     }),
   )
 })
