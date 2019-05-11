@@ -1,7 +1,7 @@
 import {dao} from 'frontful-dao'
 
 const GLOBAL_NAME = 'frontful-cms'
-const GLOBAL_NAME_HOST = 'ape-host'
+// const GLOBAL_NAME_HOST = 'ape-host'
 
 @dao.define(() => ({}))
 @dao(({config}) => ({
