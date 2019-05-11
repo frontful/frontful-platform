@@ -1,6 +1,6 @@
 {
   "name": "frontful-router",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "private": true,
   "description": "Router provider for React applications focused on model first approach",
   "main": "./router/index.js",
