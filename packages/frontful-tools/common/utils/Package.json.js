@@ -4,7 +4,7 @@ import fs from 'fs'
 export default class PackageJson {
   constructor(rootPath) {
     this.filePath = path.resolve(rootPath, 'package.json')
-    this.verFilePath = path.resolve(rootPath, '.ver')
+    this.versionFilePath = path.resolve(rootPath, '.version')
     var content = fs.readFileSync(this.filePath, 'utf8')
     Object.assign(this, JSON.parse(content))
   }
@@ -31,7 +31,7 @@ export default class PackageJson {
     content = content.replace(/"version": ".+"/i, `"version": "${version}"`)
 
     fs.writeFileSync(this.filePath, content)
-    fs.writeFileSync(this.verFilePath, version)
+    fs.writeFileSync(this.versionFilePath, version)
 
     return version
   }
