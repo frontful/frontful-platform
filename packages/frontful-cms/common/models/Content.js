@@ -7,11 +7,11 @@ import getDefaultPreferences from '../common/getDefaultPreferences'
 import Provider from './Provider'
 import {cookies} from 'frontful-utils'
 
-const GLOBAL_NAME = 'frontful-cms'
+const NAME = 'cms'
 
 @model.define(({models, config}) => ({
   $api: models.global(Api),
-  $client: config[GLOBAL_NAME],
+  $client: config[NAME],
 }))
 @model({
   preferences: formatter.ref(null, getDefaultPreferences()),

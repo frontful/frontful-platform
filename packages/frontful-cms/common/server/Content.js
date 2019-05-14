@@ -4,7 +4,7 @@ import mergeMaps from '../common/mergeMaps'
 import Provider from '@frontful/ape-host/common/server/Provider'
 import Client from '../client/Content'
 
-const GLOBAL_NAME = 'frontful-cms'
+const NAME = 'cms'
 
 export default class Content extends Provider {
   groups = null
@@ -81,8 +81,8 @@ export default class Content extends Provider {
   }
 
   client(req) {
-    req.res.locals[GLOBAL_NAME] = req.res.locals[GLOBAL_NAME] || new Client(req, null, this)
-    return req.res.locals[GLOBAL_NAME]
+    req.res.locals[NAME] = req.res.locals[NAME] || new Client(req, null, this)
+    return req.res.locals[NAME]
   }
 
   mount(...args) {
