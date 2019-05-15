@@ -6,7 +6,7 @@ export default class Content {
   async load() {
     return this.store.connection.query(`
       SELECT [group], [key], [value]
-      FROM frontful.[content]
+      FROM dbo.[content]
     `, {
       type: this.store.connection.QueryTypes.SELECT,
     })
@@ -34,17 +34,17 @@ export default class Content {
           }).join(',')
         }
 
-        UPDATE frontful.[content]
+        UPDATE dbo.[content]
         SET [value] = updated.[value]
         FROM @updated AS updated
-        WHERE frontful.[content].[group] = updated.[group] AND frontful.[content].[key] = updated.[key]
+        WHERE dbo.[content].[group] = updated.[group] AND dbo.[content].[key] = updated.[key]
 
-        INSERT INTO frontful.[content]
+        INSERT INTO dbo.[content]
         SELECT updated.*
         FROM @updated AS updated
         LEFT OUTER JOIN 
-        frontful.[content] ON updated.[group] = frontful.[content].[group] AND updated.[key] = frontful.[content].[key]
-        WHERE frontful.[content].[key] IS NULL
+        dbo.[content] ON updated.[group] = dbo.[content].[group] AND updated.[key] = dbo.[content].[key]
+        WHERE dbo.[content].[key] IS NULL
       `, {
         replacements,
         type: this.store.connection.QueryTypes.SELECT,
