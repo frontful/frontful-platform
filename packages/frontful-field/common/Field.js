@@ -21,7 +21,7 @@ class Field {
   }
 
   set value(value) {
-    this.provider.set(value)
+    this.provider.set(value || null)
   }
 
   toProps() {
