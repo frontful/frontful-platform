@@ -24,6 +24,11 @@ export default class Store {
     return Promise.resolve(query)
   }
 
+  createValue(value, replacements) {
+    replacements.push(value)
+    return '?'
+  }
+
   createExpression(object, replace = undefined, name = undefined) {
     const type = typeof object
     if (!replace || Array.isArray(replace)) {
