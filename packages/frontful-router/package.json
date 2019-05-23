@@ -30,7 +30,7 @@
     "frontful-utils": "4.x",
     "history": "^4.6.1",
     "mobx": "4.x",
-    "path-to-regexp": "^2.0.0",
+    "path-to-regexp": "^3.0.0",
     "prop-types": "^15.5.10",
     "query-string": "^5.0.0",
     "react": "16.x",

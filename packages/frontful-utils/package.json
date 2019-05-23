@@ -24,7 +24,7 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-    "cookie": "^0.3.1"
+    "cookie": "^0.4.0"
   },
   "devDependencies": {
     "frontful-tools": "4.x"
