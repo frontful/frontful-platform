@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-frontful",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "private": true,
   "description": "Babel preset provider and package deployment utilities",
   "main": "./index.js",
