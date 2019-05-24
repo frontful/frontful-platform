@@ -21,8 +21,8 @@
   ],
   "dependencies": {
     "deep-extend": "^0.6.0",
-    "sequelize": "^4.42.0",
-    "tedious": "^5.0.3"
+    "sequelize": "^5.8.6",
+    "tedious": "^6.1.1"
   },
   "devDependencies": {
     "frontful-tools": "4.x"
