@@ -1,3 +1,4 @@
+import {transformSync} from '@babel/core'
 import babelConfig from 'babel-preset-frontful/config'
 import chalk from 'chalk'
 import fs from 'fs-extra'
@@ -5,7 +6,6 @@ import glob from 'glob'
 import path from 'path'
 import scope from './utils/scope'
 import tmp from 'tmp'
-import {transform} from 'babel-core'
 
 const buildExcludeList = [
   '.babelrc',
@@ -52,7 +52,7 @@ export default function build(options) {
       transformList.forEach(function(item) {
         const filePath = path.resolve(absoluteBuildPath, item)
         const sourceCode = fs.readFileSync(filePath, 'utf8')
-        const compiled = transform(sourceCode, babelConfig.package)
+        const compiled = transformSync(sourceCode, babelConfig.package)
         fs.writeFileSync(filePath, compiled.code)
       })
     }

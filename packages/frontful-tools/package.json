@@ -27,9 +27,9 @@
     "Arturs Girons <arturs.girons@gmail.com> (https://artursgirons.info/)"
   ],
   "dependencies": {
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.4.5",
+    "@babel/register": "^7.4.4",
     "babel-preset-frontful": "4.x",
-    "babel-register": "^6.26.0",
     "chalk": "^2.4.2",
     "eslint-config-frontful": "4.x",
     "fs-extra": "^8.0.1",

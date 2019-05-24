@@ -1,6 +1,6 @@
 const Svgo = require('svgo')
 const reactSvgPlugin = require('./reactSvgPlugin')
-const {transform} = require('babel-core')
+const {transformSync} = require('@babel/core')
 
 function optimizeSvg () {
   const svgo = new Svgo({
@@ -18,9 +18,12 @@ function optimizeSvg () {
 
 function transformSvg () {
   return function (content) {
-    return transform(content, {
+    return transformSync(content, {
       babelrc: false,
-      plugins: ['syntax-jsx', reactSvgPlugin]
+      plugins: [
+        '@babel/plugin-syntax-jsx',
+        reactSvgPlugin
+      ]
     })
   }
 }

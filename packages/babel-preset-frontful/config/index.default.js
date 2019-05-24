@@ -1,6 +1,6 @@
 module.exports = {
   // Blob pattert for file to be excluded from transpilation
-  ignore: null,
+  ignore: undefined,
   server: {
     // Options that will be passed to `babel-preset-frontful/provider/server`
     options: null,

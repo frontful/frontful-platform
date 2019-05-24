@@ -1,4 +1,4 @@
-const commonConfig = require('frontful-common/config')
+// const commonConfig = require('frontful-common/config')
 const resolve = require('../../utils/resolve')
 
 module.exports = function provider(options) {
@@ -8,34 +8,44 @@ module.exports = function provider(options) {
 
   return {
     babelrc: false,
-    ignore: new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')}))`),
+    ignore: undefined,
+    // ignore: [
+    //   new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')}))`),
+    // ],
     presets: [
-      ['babel-preset-env', {
+      ['@babel/preset-env', {
         targets: {
-          browsers: 'last 2 versions',
-          node: 6,
+          browsers: [
+            'last 2 versions',
+            'ie 11',
+          ],
+          node: 10,
         },
         include: [
-          'transform-es2015-classes'
+          'transform-classes'
         ],
         modules: 'commonjs',
         loose: false,
         useBuiltIns: false,
         debug: options.debug,
       }],
-      'babel-preset-react',
+      '@babel/preset-react',
     ].map(resolve),
     plugins: [
-      'babel-plugin-transform-decorators-legacy',
+      ['@babel/plugin-proposal-decorators', {
+        legacy: true,
+      }],
       'babel-plugin-add-module-exports',
-      'babel-plugin-transform-class-properties',
-      'babel-plugin-transform-object-assign',
-      'babel-plugin-transform-object-rest-spread',
-      ['babel-plugin-transform-runtime', {
+      ['@babel/plugin-proposal-class-properties', {
+        loose: true,
+      }],
+      '@babel/plugin-transform-object-assign',
+      '@babel/plugin-proposal-object-rest-spread',
+      ['@babel/plugin-transform-runtime', {
         helpers: true,
-        polyfill: true,
+        corejs: 2,
         regenerator: true,
-        moduleName: 'babel-runtime',
+        absoluteRuntime: true,
       }],
     ].map(resolve),
   }
