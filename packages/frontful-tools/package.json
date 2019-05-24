@@ -1,6 +1,6 @@
 {
   "name": "frontful-tools",
-  "version": "4.0.12",
+  "version": "4.0.13",
   "private": true,
   "description": "Tools for Javascript applications",
   "main": "./common/index.js",
