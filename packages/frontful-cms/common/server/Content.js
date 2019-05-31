@@ -91,7 +91,7 @@ export default class Content extends Provider {
       this.client(req)
       next()
     })
-    router.use('/api/content', [
+    router.use('/api/cms', [
       require('./mounts/content')(this),
     ])
     return router

@@ -70,7 +70,7 @@ class Content {
   @action
   reload() {
     if (process.env.IS_BROWSER) {
-      this.$api.get('/content',).then(action((entries) => {
+      this.$api.get('/content').then(action((entries) => {
         this.keys.clear()
         this.keys.merge(entries)
         for (let provider of this.providers.values()) {

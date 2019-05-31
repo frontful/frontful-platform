@@ -22,7 +22,7 @@ export default class Content {
   }
 
   getScript() {
-    return `<script src="${this.params.host}/api/content/script.js"></script>`
+    return `<script src="${this.params.host}/api/cms/content.js"></script>`
   }
 
   getScriptContent() {
