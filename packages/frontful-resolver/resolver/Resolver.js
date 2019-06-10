@@ -105,7 +105,8 @@ export class Resolver {
           let processedValue = null
 
           if (value && value.__resolver__) {
-              value.__resolver__.__DONT_EXECUTE__ = false
+              value.__resolver__.setIsDisabled(false)
+              // value.__resolver__.__DONT_EXECUTE__ = false
               item.resolvers.push(value.__resolver__)
               // console.log('Restore resolver')
               processedValue = value
@@ -211,9 +212,9 @@ export class Resolver {
       }
 
       if (item.resolvers && item.resolvers.length) {
-        // item.resolvers.forEach((resolver) => {
-        //   resolver.dispose(true)
-        // })
+        item.resolvers.forEach((resolver) => {
+          resolver.setIsDisabled(true)
+        })
         item.notDisposedResolvers = (item.notDisposedResolvers || []).concat(item.resolvers)
         item.notDisposedResolvers.forEach((resolver) => {
           resolver.__DONT_EXECUTE__ = true
@@ -300,6 +301,9 @@ export class Resolver {
   }
 
   invokeReactivity(resolversTree) {
+    if (this.isDisposed) {
+      return this.cancel()
+    }
     const def = untracked(() => this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, this.props) : null)
     return this.resolveObject(def).then((definerObject) => {
       this.definerObject = definerObject
@@ -376,6 +380,26 @@ export class Resolver {
             notDisposedResolver.dispose(full)
           })
           item.notDisposedResolvers = []
+        }
+      }
+    })
+  }
+
+  setIsDisabled(disabled) {
+    this.setIsDisabledResolversTree(this.resolversTree, disabled)
+    this.__DONT_EXECUTE__ = disabled
+  }
+
+  setIsDisabledResolversTree(resolversTree, disabled) {
+    resolversTree.forEach((item) => {
+      if (item) {
+        if (item.next) {
+          this.setIsDisabledResolversTree([item.next], disabled)
+        }
+        if (item.resolvers) {
+          item.resolvers.forEach((resolver) => {
+            resolver.setIsDisabled(disabled)
+          })
         }
       }
     })
