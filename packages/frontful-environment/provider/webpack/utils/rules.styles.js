@@ -19,7 +19,7 @@ function postcssLoader(options) {
     options: Object.assign({
       plugins: [
         require('autoprefixer')({
-          browsers: 'last 4 version'
+          // browsers: 'last 4 version'
         })
       ]
     }, options)

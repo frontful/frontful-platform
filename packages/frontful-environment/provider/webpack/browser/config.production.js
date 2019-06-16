@@ -79,7 +79,7 @@ module.exports = function provider(options) {
           postcss: function() {
             return [
               require('autoprefixer')({
-                browsers: 'last 4 version'
+                // browsers: 'last 4 version'
               }),
             ]
           },
