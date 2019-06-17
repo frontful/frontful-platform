@@ -17,7 +17,8 @@ module.exports = function provider(options) {
 
   const cwd = process.cwd()
   const workspaceRoot = findWorkspaceRoot(cwd)
-  const workspaceNodeModules = workspaceRoot ? `${workspaceRoot}/node_modules` : undefined
+  const workspaceNodeModules = workspaceRoot ? `${workspaceRoot}/node_modules` : 'node_modules'
+  const nodeExternalsWhitelist = commonConfig.packages.concat(['core-js', 'corejs2'])
 
   return {
     mode: 'production',
@@ -26,9 +27,9 @@ module.exports = function provider(options) {
     devtool: options.sourceMaps && 'source-map',
     externals: [nodeExternals({
       modulesDir: workspaceNodeModules,
-      includeAbsolutePaths: true,
+      // includeAbsolutePaths: true,
       whitelist: (module) => {
-        return commonConfig.packages.find((name) => module.includes(name))
+        return nodeExternalsWhitelist.find((name) => module.includes(name))
       },
     })],
     target: 'node',
@@ -91,8 +92,9 @@ module.exports = function provider(options) {
       mainFields: ['jsnext:main', 'browser', 'main'],
       symlinks: false,
       modules: [
-        workspaceNodeModules || (cwd + '/node_modules'),
-        'node_modules',
+        workspaceNodeModules,
+        // workspaceNodeModules || (cwd + '/node_modules'),
+        // 'node_modules',
       ],
       alias: commonConfig.alias,
     },
