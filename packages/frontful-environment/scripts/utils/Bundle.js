@@ -8,7 +8,7 @@ module.exports = class Bundle {
     this.options = options
     this.options.watch = this.options.watch || {
       aggregateTimeout: 300,
-      ignored: new RegExp(`(node_modules.*node_modules)|(node_modules/(?!(${commonConfig.packages.join('|')})/))`),
+      ignored: new RegExp(`(node_modules.*node_modules)|(node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')})(\\\\|\\/)))`),
     }
     this.compiler = webpack(this.options.config)
     this.compiler.outputFileSystem = this.options.fs || this.compiler.outputFileSystem

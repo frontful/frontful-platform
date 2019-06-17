@@ -9,7 +9,7 @@ module.exports = function provider(options) {
   return {
     babelrc: false,
     ignore: [
-      new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')}))`),
+      new RegExp(`node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')}))`),
     ],
     presets: [
       ['@babel/preset-env', {
@@ -42,7 +42,7 @@ module.exports = function provider(options) {
         helpers: true,
         corejs: 2,
         regenerator: true,
-        // absoluteRuntime: true,
+        absoluteRuntime: true,
       }],
     ].map(resolve),
   }

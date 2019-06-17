@@ -10,7 +10,7 @@ module.exports = function provider(options) {
     babelrc: false,
     ignore: undefined,
     // ignore: [
-    //   new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')}))`),
+    //   new RegExp(`node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')}))`),
     // ],
     presets: [
       ['@babel/preset-env', {

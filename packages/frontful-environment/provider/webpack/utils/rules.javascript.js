@@ -9,7 +9,7 @@ module.exports = function rules(options) {
     },
     {
       test: /\.jsx?(\.svg)?$/,
-      exclude: new RegExp(`node_modules/(?!(${commonConfig.packages.join('|')})/)`),
+      exclude: new RegExp(`node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')})(\\\\|\\/))`),
       loader: 'babel-loader',
       query: Object.assign({}, options.babel, {
         cacheDirectory: options.cache,
