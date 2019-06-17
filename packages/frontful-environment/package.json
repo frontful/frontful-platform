@@ -1,6 +1,6 @@
 {
   "name": "frontful-environment",
-  "version": "4.0.11",
+  "version": "4.0.12",
   "private": true,
   "description": "Environment abstraction provider for efficient and sustainable Javascript application development",
   "main": "./index.js",
