@@ -53,12 +53,12 @@ module.exports = function provider(options) {
               return module.context && module.context.indexOf('node_modules') >= 0
             },
           },
-          styles: {
-            name: 'main',
-            test: /\.(css|scss|sass|pcss)$/,
-            chunks: 'all',
-            enforce: true,
-          },
+          // styles: {
+          //   name: 'main',
+          //   test: /\.(css|scss|sass|pcss)$/,
+          //   chunks: 'all',
+          //   enforce: true,
+          // },
         },
       },
     },
