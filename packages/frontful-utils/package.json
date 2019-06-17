@@ -1,6 +1,6 @@
 {
   "name": "frontful-utils",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "private": true,
   "description": "Utilities for Javascript applications",
   "main": "./utils/index.js",
