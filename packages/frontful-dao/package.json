@@ -1,6 +1,6 @@
 {
   "name": "frontful-dao",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "private": true,
   "description": "Data access object focused on memoization, caching, observability and isomorphism",
   "main": "./dao/index.js",
