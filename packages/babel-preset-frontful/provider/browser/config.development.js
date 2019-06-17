@@ -42,7 +42,7 @@ module.exports = function provider(options) {
         helpers: true,
         corejs: 2,
         regenerator: true,
-        absoluteRuntime: true,
+        // absoluteRuntime: true,
       }],
     ].map(resolve),
   }
