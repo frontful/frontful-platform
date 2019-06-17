@@ -4,11 +4,15 @@ function cssLoader(modules) {
   return {
     loader:`css-loader`,
     options: {
-      modules: modules || false,
+      // modules: modules ? true : false,
       // minimize: false,
-      context: process.cwd(),
+      // context: process.cwd(),
       importLoaders: modules ? 1 : 0,
-      localIdentName: process.env.NODE_ENV === 'production' ? '[hash:base64:5]' : '[path]___[name]__[local]___[hash:base64:5]'
+      // localIdentName: process.env.NODE_ENV === 'production' ? '[hash:base64:5]' : '[path]___[name]__[local]___[hash:base64:5]',
+      modules: modules ? {
+        localIdentName: process.env.NODE_ENV === 'production' ? '[hash:base64:5]' : '[path]___[name]__[local]___[hash:base64:5]',
+        context: process.cwd(),
+      } : false,
     }
   }
 }
@@ -18,11 +22,17 @@ function postcssLoader(options) {
     loader: `postcss-loader`,
     options: Object.assign({
       plugins: [
-        require('autoprefixer')({
-          // browsers: 'last 4 version'
-        })
+        require('autoprefixer')({ /* browsers: 'last 4 version' */ })
       ]
     }, options)
+  }
+}
+
+function miniCssLoader() {
+  return {
+    loader: MiniCssExtractPlugin.loader,
+    options: {
+    },
   }
 }
 
@@ -31,7 +41,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`^((?!\\.module).)*\\.css$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(),
         postcssLoader(),
       ] : 'null-loader',
@@ -39,7 +49,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`^((?!\\.module).)*\\.pcss$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(),
         postcssLoader({
           parser: 'postcss-scss'
@@ -49,7 +59,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`^((?!\\.module).)*\\.scss$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(),
         postcssLoader(),
         `sass-loader`,
@@ -58,7 +68,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`^((?!\\.module).)*\\.sass$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(),
         postcssLoader(),
         `sass-loader?indentedSyntax`,
@@ -70,7 +80,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`\\.module\\.css$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(true),
         postcssLoader(),
       ] : [
@@ -82,7 +92,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`\\.module\\.pcss$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(true),
         postcssLoader({
           parser: 'postcss-scss'
@@ -98,7 +108,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`\\.module\\.scss$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(true),
         postcssLoader(),
         `sass-loader`,
@@ -112,7 +122,7 @@ module.exports = function(options) {
     {
       test: new RegExp(`\\.module\\.sass$`),
       use: options.browser ? [
-        MiniCssExtractPlugin.loader,
+        miniCssLoader(),
         cssLoader(true),
         postcssLoader(),
         `sass-loader?indentedSyntax`,

@@ -2,7 +2,14 @@ module.exports = function() {
   return [
     {
       test: /(\.(png|jpe?g|gif|ico)$)|(^((?!\.jsx?).)*\.svg$)/i,
-      loader: 'url-loader?limit=1024',
+      use: [
+        {
+          loader: 'url-loader',
+          options: {
+            limit: 1024,
+          },
+        }
+      ],
     },
     // {
     //   test: /\.json$/,
