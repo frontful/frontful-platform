@@ -1,6 +1,6 @@
 {
   "name": "frontful-components",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "private": true,
   "description": "Frontful components",
   "main": "./common/index.js",
