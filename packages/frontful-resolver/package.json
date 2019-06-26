@@ -28,7 +28,7 @@
     "frontful-model": "4.x",
     "frontful-utils": "4.x",
     "mobx": "4.x",
-    "mobx-react": "^5.2.3",
+    "mobx-react": "^6.1.1",
     "react": "16.x",
     "react-dom": "16.x"
   },
