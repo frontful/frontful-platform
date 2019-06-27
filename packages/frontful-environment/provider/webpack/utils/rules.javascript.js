@@ -1,5 +1,4 @@
 const commonConfig = require('frontful-common/config')
-const path = require('path')
 
 module.exports = function rules(options) {
   return [
