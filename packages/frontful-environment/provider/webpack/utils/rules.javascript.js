@@ -33,6 +33,7 @@ module.exports = function rules(options) {
               allowSyntheticDefaultImports: true,
               jsx: 'preserve',
               target: 'ES6',
+              sourceMap: true,
             },
           },
         },
