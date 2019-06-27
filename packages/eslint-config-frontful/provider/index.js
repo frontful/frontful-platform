@@ -28,10 +28,10 @@ module.exports = function provider(options) { // eslint-disable-line
         'node_modules',
         '\\.(json|css|jpg|jpeg|png|gif|eot|svg|ttf|woff|woff2|mp4|webm)$',
       ],
-      'import/extensions': ['.js', '.jsx', '.json'],
+      'import/extensions': ['.js', '.ts', '.jsx', '.tsx', '.json'],
       'import/resolver': {
         node: {
-          extensions: ['.js', '.jsx', '.json']
+          extensions: ['.js', '.ts', '.jsx', '.tsx', '.json'],
         }
       },
       react: {

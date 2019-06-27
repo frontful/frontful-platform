@@ -1,4 +1,5 @@
 const commonConfig = require('frontful-common/config')
+const path = require('path')
 
 module.exports = function rules(options) {
   return [
@@ -11,9 +12,32 @@ module.exports = function rules(options) {
       test: /\.jsx?(\.svg)?$/,
       exclude: new RegExp(`node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')})(\\\\|\\/))`),
       loader: 'babel-loader',
-      query: Object.assign({}, options.babel, {
+      options: Object.assign({}, options.babel, {
         cacheDirectory: options.cache,
       }),
+    },
+    {
+      test: /\.tsx?$/,
+      exclude: new RegExp(`node_modules(\\\\|\\/)(?!(${commonConfig.packages.join('|')})(\\\\|\\/))`),
+      use: [
+        {
+          loader: 'babel-loader',
+          options: Object.assign({}, options.babel, {
+            cacheDirectory: options.cache,
+          }),
+        },
+        {
+          loader: 'ts-loader',
+          options: {
+            context: process.cwd(),
+            compilerOptions: {
+              allowSyntheticDefaultImports: true,
+              jsx: 'preserve',
+              target: 'ES6',
+            },
+          },
+        },
+      ],
     },
   ]
 }

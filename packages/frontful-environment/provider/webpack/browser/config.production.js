@@ -99,7 +99,7 @@ module.exports = function provider(options) {
       ),
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.js', '.ts', '.jsx', '.tsx'],
       mainFields: ['jsnext:main', 'browser', 'main'],
       symlinks: false,
       modules: [
