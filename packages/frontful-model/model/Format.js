@@ -89,8 +89,9 @@ class Format {
             change.newValue = this.deserializeValue(this.format, change.newValue, context, () => object[change.index])
           }
           else if (change.type === 'splice') {
-            change.added = change.added.map((item, increment) => {
-              return this.deserializeValue(this.format, item, context, () => (((change.index + increment) < object.length) ? object[change.index + increment] : null))
+            change.added = change.added.map((item) => {
+              // return this.deserializeValue(this.format, item, context, () => (((change.index + increment) < object.length) ? object[change.index + increment] : null))
+              return this.deserializeValue(this.format, item, context, () => null)
             })
           }
           return change

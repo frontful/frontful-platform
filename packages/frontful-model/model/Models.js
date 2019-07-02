@@ -44,7 +44,7 @@ class Models {
     else {
       const model = new Type('deferred')
       this.models.set(key, model)
-      model.initializer(this.data[key] || data, this.context)
+      model.initializer(this.data[key] || data, {...this.context, name: key})
       delete this.data[key]
       return model
     }
@@ -63,7 +63,7 @@ class Models {
       if (this.data[key]) {
         const model = new registrar.Types[key]('deferred')
         this.models.set(key, model)
-        model.initializer(data[key], this.context)
+        model.initializer(data[key], {...this.context, name: key})
         delete this.data[key]
       }
     })
