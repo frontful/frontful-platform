@@ -1,6 +1,6 @@
 {
   "name": "frontful-cms",
-  "version": "4.0.14",
+  "version": "4.0.15",
   "private": true,
   "description": "Frontful CMS",
   "main": "./common/index.js",
