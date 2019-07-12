@@ -140,7 +140,7 @@ const prototype = {
     return request
   },
 
-  memoized({method, path, body}) {
+  getMemoized({method, path, body}) {
     if (this.memoized && this.memoized[method] && this.memoized[method][path] && this.memoized[method][path].length > 0) {
       for (let i = 0, l = this.memoized[method][path].length; i < l; i++) {
         const object = this.memoized[method][path][i]
@@ -232,38 +232,43 @@ const prototype = {
 
     const shouldMemoize = !retryCount
 
-    return (shouldMemoize && this.memoized(memoizeKey)) || this.memoize(memoizeKey, Promise.resolve(
-      fetch(url, fetchOptions)).then((response) => {
-        if (response.status === 204) {
-          return null
-        }
-        else if (response.status >= 400) {
-          let _response = response.clone()
-          return parse(response)
-            .catch(() => _response.text())
-            .catch(() => null)
-            .then((parsed) => {
-              _response = null
-              throw new HttpError(response, parsed)
+    return (shouldMemoize && this.getMemoized(memoizeKey)) || this.memoize(
+      memoizeKey,
+      fetch(url, fetchOptions)
+        .then((response) => {
+          if (response.status === 204) {
+            return null
+          }
+          else if (response.status >= 400) {
+            let _response = response.clone()
+            return parse(response)
+              .catch(() => _response.text())
+              .catch(() => null)
+              .then((parsed) => {
+                _response = null
+                throw new HttpError(response, parsed)
+              })
+          }
+          else {
+            return parse(response)
+          }
+        })
+        .then((parsed) => {
+          if (fetchOptions.method === 'GET') {
+            this.data.set(`${name ? `${name}:` : ''}${normalPath}`, parsed)
+          }
+          return parsed
+        })
+        .catch((error) => {
+          if (fetchOptions.onError) {
+            retryCount = retryCount || 0
+            return Promise.resolve(fetchOptions.onError.call(this, error, retryCount, fetchOptions.onErrorFail)).then(() => {
+              return this.request(path, body, options, retryCount + 1)
             })
-        }
-        else {
-          return parse(response)
-        }
-      }).then((parsed) => {
-        if (fetchOptions.method === 'GET') {
-          this.data.set(`${name ? `${name}:` : ''}${normalPath}`, parsed)
-        }
-        return parsed
-      }).catch((error) => {
-        if (fetchOptions.onError) {
-          retryCount = retryCount || 0
-          return Promise.resolve(fetchOptions.onError.call(this, error, retryCount, fetchOptions.onErrorFail)).then(() => {
-            return this.request(path, body, options, retryCount + 1)
-          })
-        }
-        throw error
-      }), shouldMemoize
+          }
+          throw error
+        }),
+      shouldMemoize
     )
   }
 }
