@@ -246,7 +246,8 @@ export class Resolver {
         }
 
         if (execution.promise.isProcessing) {
-          execution.resolve()
+          const isPromise = !!item.process.promise
+          execution.resolve(isPromise)
           execution.promise.isProcessing = false
         }
         if (boundProcess.promise) {
@@ -281,10 +282,13 @@ export class Resolver {
     }
 
     item.disposeReaction = reaction(resolveProps, reactToProps, {
-      fireImmediately: true
+      fireImmediately: true,
+      scheduler: (run) => execution.promise.catch().then(run),
     })
 
-    return execution.promise
+    return execution.promise.then((isPromise) => {
+      return isPromise ? new Promise((resolve) => setTimeout(() => resolve(), 0)) : undefined
+    })
   }
 
   resolveObject(object) {
