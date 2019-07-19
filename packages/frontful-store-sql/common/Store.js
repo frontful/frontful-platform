@@ -47,7 +47,8 @@ export default class Store {
           return '(' + object.map((object) => this.createExpression(object, replace, name)).join(' OR ') + ')'
         }
         else {
-          return '0 = 1'
+          // return '0 = 1'
+          return '1 = 1'
         }
       }
       else if (object && type === 'object') {
@@ -56,7 +57,8 @@ export default class Store {
           return '(' + keys.map((name) => this.createExpression(object[name], replace, name)).join(' AND ') + ')'
         }
         else {
-          return '0 = 1'
+          // return '0 = 1'
+          return '1 = 1'
         }
       }
       else {
