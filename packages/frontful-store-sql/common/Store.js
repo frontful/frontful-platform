@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-process['fronfutl-store-sql'] = {}
+process['fronfutl-store-sql'] = process['fronfutl-store-sql'] || {}
 
 export default class Store {
   constructor(name, connectionParams) {

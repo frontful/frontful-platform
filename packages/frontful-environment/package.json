@@ -44,7 +44,7 @@
     "json-loader": "^0.5.4",
     "memory-fs": "^0.4.1",
     "mime": "^2.0.3",
-    "mini-css-extract-plugin": "^0.7.0",
+    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.5.2",
     "null-loader": "^3.0.0",
     "object-path": "^0.11.4",
