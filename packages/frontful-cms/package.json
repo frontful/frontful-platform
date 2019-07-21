@@ -22,8 +22,6 @@
   "dependencies": {
     "@frontful/ape-components": "1.x",
     "@frontful/ape-host": "1.x",
-    "body-parser": "^1.17.2",
-    "cookie-parser": "^1.4.3",
     "deep-extend": "^0.6.0",
     "express": "^4.15.2",
     "frontful-cms": "4.x",
