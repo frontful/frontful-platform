@@ -283,12 +283,34 @@ export class Resolver {
 
     item.disposeReaction = reaction(resolveProps, reactToProps, {
       fireImmediately: true,
-      scheduler: (run) => execution.promise.catch().then(run),
-    })
+      scheduler: (run) => {
+        const processing = item.process && item.process.promise && item.process.promise.isProcessing
+        if (processing) {
+          item.process.canceled = true
+        }
+  
+        // if (item.resolvers && item.resolvers.length) {
+        //   item.resolvers.forEach((resolver) => {
+        //     resolver.setIsDisabled(true)
+        //   })
+        //   item.notDisposedResolvers = (item.notDisposedResolvers || []).concat(item.resolvers)
+        //   item.notDisposedResolvers.forEach((resolver) => {
+        //     resolver.__DONT_EXECUTE__ = true
+        //   })
+        //   // console.log(`Not disposed count: ${item.notDisposedResolvers.length}`)
+        //   item.resolvers = []
+        // }
+  
+        this.disposeResolversTree([item.next])
 
-    return execution.promise.then((isPromise) => {
-      return isPromise ? new Promise((resolve) => setTimeout(() => resolve(), 0)) : undefined
+        item.process.promise.catch().then(run)
+        // execution.promise.catch().then(run)
+      },
     })
+    return execution.promise
+    // return execution.promise.then((isPromise) => {
+    //   return isPromise ? new Promise((resolve) => setTimeout(() => resolve(), 0)) : undefined
+    // })
   }
 
   resolveObject(object) {
