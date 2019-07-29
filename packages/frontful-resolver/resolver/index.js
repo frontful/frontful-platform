@@ -1,5 +1,5 @@
-import {Resolver} from './Resolver'
 import {Exceptions} from './Exceptions'
+import {Resolver} from './Resolver'
 
 function resolver(resolvable) {
   return resolver.bind(resolvable)

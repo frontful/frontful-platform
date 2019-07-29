@@ -1,8 +1,8 @@
-import React from 'react'
-import {Promisable as PromisableClass, deferred, getDisplayName, isBrowser} from 'frontful-utils'
-import {observer as mobxObserver} from 'mobx-react'
-import {untracked, observable, reaction} from 'mobx'
 import {Exceptions} from './Exceptions'
+import {observer as mobxObserver} from 'mobx-react'
+import {Promisable as PromisableClass, deferred, getDisplayName, isBrowser} from 'frontful-utils'
+import {untracked, observable, reaction} from 'mobx'
+import React from 'react'
 
 let Promisable
 let observer
@@ -106,9 +106,7 @@ export class Resolver {
 
           if (value && value.__resolver__) {
               value.__resolver__.setIsDisabled(false)
-              // value.__resolver__.__DONT_EXECUTE__ = false
               item.resolvers.push(value.__resolver__)
-              // console.log('Restore resolver')
               processedValue = value
           }
           else if (React.isValidElement(value)) {
@@ -182,16 +180,12 @@ export class Resolver {
     execution.promise.isProcessing = true
 
     const resolveProps = () => {
-      // if (this.__DONT_EXECUTE__ === false) {
-      //   console.log('RESOTRED')
-      // }
       if (this.__DONT_EXECUTE__) {
         return
       }
       try {
         return item.resolver({
           ...this.definerObject,
-          //...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, item.props) : null,
           ...item.props,
           getRequisites: this.getRequisites,
         }) || {}
@@ -219,7 +213,6 @@ export class Resolver {
         item.notDisposedResolvers.forEach((resolver) => {
           resolver.__DONT_EXECUTE__ = true
         })
-        // console.log(`Not disposed count: ${item.notDisposedResolvers.length}`)
         item.resolvers = []
       }
 
@@ -288,29 +281,11 @@ export class Resolver {
         if (processing) {
           item.process.canceled = true
         }
-  
-        // if (item.resolvers && item.resolvers.length) {
-        //   item.resolvers.forEach((resolver) => {
-        //     resolver.setIsDisabled(true)
-        //   })
-        //   item.notDisposedResolvers = (item.notDisposedResolvers || []).concat(item.resolvers)
-        //   item.notDisposedResolvers.forEach((resolver) => {
-        //     resolver.__DONT_EXECUTE__ = true
-        //   })
-        //   // console.log(`Not disposed count: ${item.notDisposedResolvers.length}`)
-        //   item.resolvers = []
-        // }
-  
         this.disposeResolversTree([item.next])
-
         item.process.promise.catch().then(run)
-        // execution.promise.catch().then(run)
       },
     })
     return execution.promise
-    // return execution.promise.then((isPromise) => {
-    //   return isPromise ? new Promise((resolve) => setTimeout(() => resolve(), 0)) : undefined
-    // })
   }
 
   resolveObject(object) {
@@ -439,7 +414,6 @@ export class Resolver {
     return this.invokeReactivity(this.resolversTree).then(() => {
       const Component = this.Component
       const getRequisites = this.getRequisites.bind(this)
-      // const dispose = () => {this.dispose()}
 
       const result = observer(
         class Resolver extends React.Component {
@@ -449,16 +423,11 @@ export class Resolver {
               requisites && Component && <Component resolved={requisites} {...requisites} {...this.props}/>
             )
           }
-          // componentWillUnmount() {
-          //   dispose()
-          // }
         }
       )
 
       result.__resolver_resolved__ = true
       result.__resolver__ = this
-
-      // result.__component__ = Component
 
       return result
     }).catch((error) => {
