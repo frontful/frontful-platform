@@ -13,6 +13,7 @@ import {isBrowser} from 'frontful-utils'
 }))
 @model.format({
   path: null,
+  state: formatter.map(),
   prevPath: null,
   status: null,
   injectionRegister: formatter.map(),
@@ -23,7 +24,9 @@ class Model {
     this.initialize()
     this.cache = {}
     this['push'] = this.execute.bind(this, 'push')
+    this['push']['state'] = (state) => this['push'](this.path, state)
     this['replace'] = this.execute.bind(this, 'replace')
+    this['replace']['state'] = (state) => this['replace'](this.path, state)
     this['pop'] = this.execute.bind(this, 'pop')
   }
 
@@ -31,6 +34,23 @@ class Model {
     this.params = {
       ...params,
       path: this.path,
+    }
+  }
+
+  getState = (key, defaultValue = null) => {
+    if (!this.state.has(key)) {
+      this.state.set(key, defaultValue)
+    }
+    return this.state.get(key)
+  }
+
+  @action
+  _setState = (stateContainer) => {
+    const type = typeof stateContainer
+    if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
+      Object.keys(stateContainer).forEach((key) => {
+        this.state.set(key, stateContainer[key])
+      })
     }
   }
 
@@ -82,12 +102,12 @@ class Model {
     return merged
   }
 
-  execute(action, _path) {
-    return this._execute(action, _path)
+  execute(action, _path, _state) {
+    return this._execute(action, _path, _state)
   }
 
   @action
-  _execute(action, _path) {
+  _execute(action, _path, _state) {
     if (action === 'pop') {
       this.history.goBack()
       return
@@ -112,22 +132,27 @@ class Model {
     const nqs = queryStr
 
     if (action === 'push' && this.path === path && oqs !== nqs) {
-      return this.execute('replace', _path)
+      return this.execute('replace', _path, _state)
     }
 
     let mappedPath = (this.config.mapping[path] || path) + (queryStr ? '?' + queryStr : '')
 
     path += queryStr ? '?' + queryStr : ''
 
-    if (this.path !== path || oqs !== nqs) {
+    if (this.path !== path || oqs !== nqs || _state) {
       if (isBrowser()) {
         if (mappedPath) {
           mappedPath = mappedPath.replace(window.location.origin, '')
         }
-        this.history[action](mappedPath)
+        this.history[action](mappedPath, _state)
       }
       else {
-        this.reload(mappedPath)
+        if (_state) {
+          this._setState(_state)
+        }
+        else {
+          this.reload(mappedPath)
+        }
       }
     }
   }
@@ -222,6 +247,7 @@ class Model {
   @action
   initialize() {
     this.path = this.getPath()
+    this._setState(null)
     this.params = {}
     this.prevPath = '/'
     this.status = 'resolved'
@@ -240,6 +266,7 @@ class Model {
         this.status = 'resolving'
 
         this.path = this.reverseMatchIfAny(location.pathname)
+        this._setState(location.state)
       }))
     }
   }
