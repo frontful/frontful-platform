@@ -27,6 +27,7 @@ class Model {
     this['push']['state'] = (state) => this['push'](this.path, state)
     this['replace'] = this.execute.bind(this, 'replace')
     this['replace']['state'] = (state) => this['replace'](this.path, state)
+    // this['replace']['state'] = (state) => this._setState(state)
     this['pop'] = this.execute.bind(this, 'pop')
   }
 
