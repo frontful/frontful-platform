@@ -9,7 +9,8 @@ function test(pattern, path) {
     const match = `${path}`.match(pattern instanceof RegExp ? pattern : pathToRegexp(pattern, keys))
     if (match) {
       return keys.reduce((result, key, idx) => {
-        result[key.name] = decodeURI(match[idx + 1])
+        const value = match[idx + 1]
+        result[key.name] = value && decodeURI(value)
         return result
       }, {match})
     }
