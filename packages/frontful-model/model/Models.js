@@ -70,7 +70,7 @@ class Models {
   }
 
   renderToString() {
-    return `<script>window.frontful = window.frontful || {};window.frontful.model = window.frontful.model || {};window.frontful.model.state = ${JSON.stringify(this.serialize())};</script>`
+    return `<script>window.frontful = window.frontful || {};window.frontful.model = window.frontful.model || {};window.frontful.model.state = ${JSON.stringify(this.serialize(), null, 2)};</script>`
   }
 }
 
