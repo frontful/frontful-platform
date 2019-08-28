@@ -1,4 +1,5 @@
-import {Heading, Content} from '@frontful/ape-components'
+import {GroupField} from '@frontful/ape-fields'
+import {Heading, Content, Toolbar} from '@frontful/ape-components'
 import {resolver} from 'frontful-resolver'
 import {style} from 'frontful-style'
 import ContentModel from 'frontful-cms'
@@ -17,11 +18,21 @@ class Settings extends React.Component {
   render() {
     const {style} = this.props
     return (
-      <Content>
-        <div className={style.css('settings')}>
-          <Heading accent title="CMS settings" />
-        </div>
-      </Content>
+      <div className={style.css('settings')}>
+        <Toolbar accent
+          left={[
+            {
+              text: 'Save',
+              action: () => {},
+            },
+          ]}
+        />
+        <Content>
+          <Heading accent title={'Settings'} subtitle={'CMS provider'} />
+          <GroupField>
+          </GroupField>
+        </Content>
+      </div>
     )
   }
 }
