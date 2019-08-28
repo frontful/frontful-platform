@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "@frontful/ape-components": "1.x",
+    "@frontful/ape-fields": "1.x",
     "@frontful/ape-host": "1.x",
     "deep-extend": "^0.6.0",
     "express": "^4.15.2",

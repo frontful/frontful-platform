@@ -1,8 +1,9 @@
+import Client from '../client/Content'
 import ContentModel from '../store/models/Content'
 import getPreferences from '../common/getPreferences'
 import mergeMaps from '../common/mergeMaps'
 import Provider from '@frontful/ape-host/common/server/Provider'
-import Client from '../client/Content'
+// import UserFeatures from '../store/models/UserFeatures'
 
 const NAME = 'cms'
 
@@ -12,6 +13,7 @@ export default class Content extends Provider {
   load() {
     this.models = {
       content: new ContentModel(this.store),
+      // userFeatures: new UserFeatures(this.store),
     }
     return this.models.content.load().then((entries) => {
       if (this.groups) {
