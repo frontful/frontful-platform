@@ -29,52 +29,89 @@ export default class Store {
     return '?'
   }
 
-  createExpression(object, replace = undefined, name = undefined) {
+  createExpression(object, replace = undefined, name = undefined, prevName = undefined, group = undefined) {
+    console.log(object)
     const type = typeof object
     if (!replace || Array.isArray(replace)) {
       const replacements = replace || []
-      return {
+      const result = {
         replacements: replacements,
         sql: !object ? '1 = 1' : this.createExpression(object, (value) => {
           replacements.push(value)
           return '?'
-        }, name),
+        }, name, prevName, group),
       }
+      console.log(result)
+      return result
     }
     else {
+      if (typeof object === 'undefined') {
+        if (group === 'OR') {
+          return '1 = 0'
+        }
+        else {
+          return '1 = 1'
+        }
+      }
       if (Array.isArray(object)) {
         if (object.length > 0) {
-          return '(' + object.map((object) => this.createExpression(object, replace, name)).join(' OR ') + ')'
+          return '(' + object.map((object) => this.createExpression(object, replace, name, prevName, 'OR')).join(' OR ') + ')'
         }
         else {
           // return '0 = 1'
-          return '1 = 1'
+          // return '1 = 1'
+          if (group === 'OR') {
+            return '1 = 0'
+          }
+          else {
+            return '1 = 1'
+          }
         }
       }
       else if (object && type === 'object') {
         if (Object.keys(object).length > 0) {
           const keys = Object.keys(object)
-          return '(' + keys.map((name) => this.createExpression(object[name], replace, name)).join(' AND ') + ')'
+          const prevName = name
+          return '(' + keys.map((name) => this.createExpression(object[name], replace, name, prevName, 'AND')).join(' AND ') + ')'
         }
         else {
           // return '0 = 1'
-          return '1 = 1'
+          // return '1 = 1'
+          if (group === 'OR') {
+            return '1 = 0'
+          }
+          else {
+            return '1 = 1'
+          }
         }
       }
       else {
         if (name) {
           let operation
           const nameParts = name.split('.').map((part) => part.replace(/\[|\]/gi, ''))
-          if (object === null) {
-            operation = 'IS'
+          const columnName = nameParts.map((value) => `[${value}]`).join('.')
+          const prevNameParts = prevName && prevName.split('.').map((part) => part.replace(/\[|\]/gi, ''))
+          const prevColumnName = prevName && prevNameParts.map((value) => `[${value}]`).join('.')
+          switch (name) {
+            case 'STARTS':
+              return `${prevColumnName} LIKE ${replace((object || '') + '%')}`
+            case 'ENDS':
+                return `${prevColumnName} LIKE ${replace('%' + (object || ''))}`
+            case 'CONTAINS':
+                return `${prevColumnName} LIKE ${replace('%' + (object || '') + '%')}`
+            default: {
+              if (object === null) {
+                return `${columnName} IS ${replace(object)}`
+              }
+              else if (typeof object === 'number') {
+                operation = '<='
+              }
+              else {
+                operation = '='
+              }
+              return `${columnName} ${operation} ${replace(object)}`
+            }
           }
-          else if (typeof object === 'number') {
-            operation = '<='
-          }
-          else {
-            operation = '='
-          }
-          return `${nameParts.map((value) => `[${value}]`).join('.')} ${operation} ${replace(object)}`
         }
         else {
           return '0 = 1'
