@@ -30,7 +30,6 @@ export default class Store {
   }
 
   createExpression(object, replace = undefined, name = undefined, prevName = undefined, group = undefined) {
-    console.log(object)
     const type = typeof object
     if (!replace || Array.isArray(replace)) {
       const replacements = replace || []
@@ -41,7 +40,6 @@ export default class Store {
           return '?'
         }, name, prevName, group),
       }
-      console.log(result)
       return result
     }
     else {
@@ -53,7 +51,7 @@ export default class Store {
           return '1 = 1'
         }
       }
-      if (Array.isArray(object)) {
+      else if (Array.isArray(object) && name !== 'IN') {
         if (object.length > 0) {
           return '(' + object.map((object) => this.createExpression(object, replace, name, prevName, 'OR')).join(' OR ') + ')'
         }
@@ -68,7 +66,7 @@ export default class Store {
           }
         }
       }
-      else if (object && type === 'object') {
+      else if (!Array.isArray(object) && object && type === 'object') {
         if (Object.keys(object).length > 0) {
           const keys = Object.keys(object)
           const prevName = name
@@ -93,6 +91,8 @@ export default class Store {
           const prevNameParts = prevName && prevName.split('.').map((part) => part.replace(/\[|\]/gi, ''))
           const prevColumnName = prevName && prevNameParts.map((value) => `[${value}]`).join('.')
           switch (name) {
+            case 'IN':
+              return `${prevColumnName} IN (${object.map((value) => replace(value)).join(', ')})`
             case 'STARTS':
               return `${prevColumnName} LIKE ${replace((object || '') + '%')}`
             case 'ENDS':

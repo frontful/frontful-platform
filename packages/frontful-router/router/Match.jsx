@@ -61,7 +61,6 @@ function match(element, path, setParams) {
       __cachedMatch = __match.map((element) => {
         const sourceElement = element.props.sourceElement
         if (cache.elementCache.has(sourceElement)) {
-          // console.log('USE CACHED')
           return cache.elementCache.get(sourceElement)
         }
         else {
@@ -78,7 +77,6 @@ function match(element, path, setParams) {
         elements.forEach((element, idx) => {
           cache.elementCache.set(element, items[idx])
         })
-        // console.log(cache.elementCache)
       },
     }
   })
@@ -106,7 +104,6 @@ class Match extends React.PureComponent {
 
   render() {
     const {elements, items, updateCache, ...rest} = this.props
-    // console.log(items)
     updateCache(elements, items)
     return this.hierarchify(items, rest)
   }
