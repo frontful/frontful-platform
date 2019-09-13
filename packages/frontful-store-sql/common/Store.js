@@ -1,5 +1,11 @@
 import Sequelize from 'sequelize'
 
+// https://github.com/sequelize/sequelize/issues/7930#issuecomment-322226074
+// https://github.com/sequelize/sequelize/blob/488c048ca7d57ee77f817b4cdd2302980a13b47c/lib/data-types.js#L464
+Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
+  return this._applyTimezone(date, options).format('YYYY-MM-DD HH:mm:ss.SSS');
+}
+
 process['fronfutl-store-sql'] = process['fronfutl-store-sql'] || {}
 
 export default class Store {
