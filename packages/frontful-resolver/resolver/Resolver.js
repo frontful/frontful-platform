@@ -276,14 +276,14 @@ export class Resolver {
 
     item.disposeReaction = reaction(resolveProps, reactToProps, {
       fireImmediately: true,
-      scheduler: (run) => {
+      scheduler: process.env.IS_BROWSER ? (run) => {
         const processing = item.process && item.process.promise && item.process.promise.isProcessing
         if (processing) {
           item.process.canceled = true
         }
         this.disposeResolversTree([item.next])
         item.process.promise.catch().then(run)
-      },
+      } : undefined,
     })
     return execution.promise
   }
