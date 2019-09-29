@@ -26,16 +26,20 @@ class Model {
     this['push'] = this.execute.bind(this, 'push')
     this['push']['state'] = (state) => this['push'](this.path, state)
     this['replace'] = this.execute.bind(this, 'replace')
-    this['replace']['state'] = (state) => this['replace'](this.path, state)
-    // this['replace']['state'] = (state) => this._setState(state)
+    // this['replace']['state'] = (state) => this['replace'](this.path, state)
+    this['replace']['state'] = (state) => this.___setState(state)
     this['pop'] = this.execute.bind(this, 'pop')
   }
 
+  stateContainer = {}
+
+  @action
   setParams = (params) => {
     this.params = {
       ...params,
       path: this.path,
     }
+    this.___setState()
   }
 
   getState = (key, defaultValue = null) => {
@@ -46,12 +50,25 @@ class Model {
   }
 
   @action
-  _setState = (stateContainer) => {
+  ___setState = (stateContainer = this.stateContainer) => {
+    // debugger
     const type = typeof stateContainer
     if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
       Object.keys(stateContainer).forEach((key) => {
         this.state.set(key, stateContainer[key])
       })
+    }
+    this.stateContainer = {}
+  }
+
+  @action
+  _setState = (stateContainer) => {
+    const type = typeof stateContainer
+    if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
+      Object.assign(this.stateContainer, stateContainer)
+      // Object.keys(stateContainer).forEach((key) => {
+      //   this.state.set(key, stateContainer[key])
+      // })
     }
   }
 
@@ -149,7 +166,7 @@ class Model {
       }
       else {
         if (_state) {
-          this._setState(_state)
+          this.___setState(_state)
         }
         else {
           this.reload(mappedPath)
@@ -248,7 +265,7 @@ class Model {
   @action
   initialize() {
     this.path = this.getPath()
-    this._setState(null)
+    this.___setState(null)
     this.params = {}
     this.prevPath = '/'
     this.status = 'resolved'
@@ -267,7 +284,13 @@ class Model {
         this.status = 'resolving'
 
         this.path = this.reverseMatchIfAny(location.pathname)
-        this._setState(location.state)
+
+        if (this.prevPath === this.path) {
+          this.___setState(location.state)
+        }
+        else {
+          this._setState(location.state)
+        }
       }))
     }
   }
