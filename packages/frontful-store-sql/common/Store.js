@@ -100,11 +100,11 @@ export default class Store {
             case 'IN':
               return `${prevColumnName} IN (${object.map((value) => replace(value)).join(', ')})`
             case 'STARTS':
-              return `${prevColumnName} LIKE ${replace((object || '') + '%')}`
+              return `${prevColumnName} LIKE ${replace((object || '').replace(/\s+/gi, '%') + '%')}`
             case 'ENDS':
-                return `${prevColumnName} LIKE ${replace('%' + (object || ''))}`
+                return `${prevColumnName} LIKE ${replace('%' + (object || '').replace(/\s+/gi, '%'))}`
             case 'CONTAINS':
-                return `${prevColumnName} LIKE ${replace('%' + (object || '') + '%')}`
+                return `${prevColumnName} LIKE ${replace('%' + (object || '').replace(/\s+/gi, '%') + '%')}`
             default: {
               if (object === null) {
                 return `${columnName} IS ${replace(object)}`
