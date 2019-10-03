@@ -1,5 +1,5 @@
 export {default as Content} from './services/Content'
+export {default as RoleFeatures} from './services/RoleFeatures'
 export {default as Settings} from './services/Settings'
 export {default as Setup} from './services/Setup'
-export {default as UserFeatures} from './services/UserFeatures'
 export {default} from './models/Content'

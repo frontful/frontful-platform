@@ -6,7 +6,7 @@ import {model} from 'frontful-model'
 }))
 @model({
 })
-class UserFeatures {
+class RoleFeatures {
 }
 
-export default UserFeatures
+export default RoleFeatures

@@ -1,14 +1,15 @@
 export default class Content {
-  constructor(store) {
-    this.store = store
+  constructor(cms) {
+    this.cms = cms
+    this.sql = this.cms.sql
   }
 
   async load() {
-    return this.store.connection.query(`
+    return this.sql.connection.query(`
       SELECT [group], [key], [value]
       FROM dbo.[content]
     `, {
-      type: this.store.connection.QueryTypes.SELECT,
+      type: this.sql.connection.QueryTypes.SELECT,
     })
   }
 
@@ -19,7 +20,7 @@ export default class Content {
         replacements.push(value)
         return '?'
       }
-      return this.store.connection.query(`
+      return this.sql.connection.query(`
         DECLARE @updated TABLE (
           [group] varchar(50) NOT NULL,
           [key] varchar(150) NOT NULL,
@@ -47,7 +48,7 @@ export default class Content {
         WHERE dbo.[content].[key] IS NULL
       `, {
         replacements,
-        type: this.store.connection.QueryTypes.SELECT,
+        type: this.sql.connection.QueryTypes.SELECT,
       }).then(() => null)
     }
   }
