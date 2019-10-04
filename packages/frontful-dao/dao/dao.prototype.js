@@ -128,11 +128,15 @@ const prototype = {
       this.memoized[method] = this.memoized[method] || {}
       this.memoized[method][path] = this.memoized[method][path] || []
 
-      const index = this.memoized[method][path].push({body, request}) - 1
+      const bdy = {body, request}
+      this.memoized[method][path].push(bdy)
+      // const index = this.memoized[method][path].push(bdy) - 1
 
       request.then(() => {
+        const index = this.memoized[method][path].indexOf(bdy)
         this.memoized[method][path].splice(index, 1)
       }).catch(() => {
+        const index = this.memoized[method][path].indexOf(bdy)
         this.memoized[method][path].splice(index, 1);
       })
     }
