@@ -122,7 +122,8 @@ const prototype = {
     }
   },
 
-  memoize({method, path, body}, request, shouldMemoize) {
+  memoize(key, request, shouldMemoize) {
+    const {method, path, body} = key
     if (shouldMemoize) {
       this.memoized = this.memoized || {}
       this.memoized[method] = this.memoized[method] || {}
@@ -139,6 +140,10 @@ const prototype = {
         const index = this.memoized[method][path].indexOf(bdy)
         this.memoized[method][path].splice(index, 1);
       })
+    }
+
+    if (this.apiState) {
+      this.apiState.add(request, key)
     }
 
     return request
