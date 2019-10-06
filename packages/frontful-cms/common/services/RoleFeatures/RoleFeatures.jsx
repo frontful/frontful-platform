@@ -22,7 +22,7 @@ class RoleFeatures extends React.Component {
     const {style, fields} = this.props
     return (
       <div className={style.css('role_features')}>
-        <Heading accent title="CMS features" />
+        <Heading tag="h3" title="CMS features" />
         <GroupField>
           <CheckboxField medium text={'Manager'} field={fields.manage} />
         </GroupField>
