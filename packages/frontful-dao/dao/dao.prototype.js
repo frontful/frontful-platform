@@ -122,7 +122,7 @@ const prototype = {
     }
   },
 
-  memoize(key, request, shouldMemoize) {
+  memoize(key, request, {shouldMemoize, silent}) {
     const {method, path, body} = key
     if (shouldMemoize) {
       this.memoized = this.memoized || {}
@@ -142,7 +142,7 @@ const prototype = {
       })
     }
 
-    if (this.apiState) {
+    if (!silent && this.apiState) {
       this.apiState.add(request, key)
     }
 
@@ -215,7 +215,7 @@ const prototype = {
       url = normalPath
     }
 
-    const {parser, name, ...fetchOptions} = deepExtend({}, this.options, options)
+    const {parser, name, silent, ...fetchOptions} = deepExtend({}, this.options, options)
 
     fetchOptions.method = fetchOptions.method.toUpperCase()
 
@@ -277,7 +277,10 @@ const prototype = {
           }
           throw error
         }),
-      shouldMemoize
+      {
+        shouldMemoize,
+        silent,
+      }
     )
   }
 }
