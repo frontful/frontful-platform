@@ -26,12 +26,11 @@ class Model {
     this['push'] = this.execute.bind(this, 'push')
     this['push']['state'] = (state) => this['push'](this.path, state)
     this['replace'] = this.execute.bind(this, 'replace')
-    // this['replace']['state'] = (state) => this['replace'](this.path, state)
-    this['replace']['state'] = (state) => this.___setState(state)
+    this['replace']['state'] = (state) => this['replace'](this.path, state)
     this['pop'] = this.execute.bind(this, 'pop')
   }
 
-  stateContainer = {}
+  stateContainer = null
 
   @action
   setParams = (params) => {
@@ -50,25 +49,24 @@ class Model {
   }
 
   @action
-  ___setState = (stateContainer = this.stateContainer) => {
-    // debugger
+  ___setState = (stateContainer = this.stateContainer || this.state.toJSON()) => {
     const type = typeof stateContainer
+    this.state.clear()
     if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
       Object.keys(stateContainer).forEach((key) => {
         this.state.set(key, stateContainer[key])
       })
     }
-    this.stateContainer = {}
+    if (stateContainer === this.stateContainer) {
+      this.stateContainer = null
+    }
   }
 
   @action
   _setState = (stateContainer) => {
     const type = typeof stateContainer
     if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
-      Object.assign(this.stateContainer, stateContainer)
-      // Object.keys(stateContainer).forEach((key) => {
-      //   this.state.set(key, stateContainer[key])
-      // })
+      this.stateContainer = Object.assign({}, this.stateContainer, stateContainer)
     }
   }
 
@@ -162,11 +160,11 @@ class Model {
         if (mappedPath) {
           mappedPath = mappedPath.replace(window.location.origin, '')
         }
-        this.history[action](mappedPath, _state)
+        this.history[action](mappedPath, Object.assign(this.state.toJSON(), _state))
       }
       else {
         if (_state) {
-          this.___setState(_state)
+          this.___setState(Object.assign(this.state.toJSON(), _state))
         }
         else {
           this.reload(mappedPath)
@@ -265,7 +263,7 @@ class Model {
   @action
   initialize() {
     this.path = this.getPath()
-    this.___setState(null)
+    // this.___setState(null)
     this.params = {}
     this.prevPath = '/'
     this.status = 'resolved'
