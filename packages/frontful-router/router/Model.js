@@ -13,7 +13,7 @@ import {isBrowser} from 'frontful-utils'
 }))
 @model.format({
   path: null,
-  state: formatter.map(),
+  state: null,
   prevPath: null,
   status: null,
   injectionRegister: formatter.map(),
@@ -42,20 +42,29 @@ class Model {
   }
 
   getState = (key, defaultValue = null) => {
-    if (!this.state.has(key)) {
-      this.state.set(key, defaultValue)
-    }
-    return this.state.get(key)
+    return (this.state && this.state[key]) || defaultValue
+    // if (!this.state.has(key)) {
+    //   this.state.set(key, defaultValue)
+    // }
+    // return this.state.get(key)
   }
 
   @action
-  ___setState = (stateContainer = this.stateContainer || this.state.toJSON()) => {
+  ___setState = (stateContainer = this.stateContainer || this.state) => {
     const type = typeof stateContainer
-    this.state.clear()
+    // this.state.clear()
     if (stateContainer && type === 'object' && !Array.isArray(stateContainer)) {
-      Object.keys(stateContainer).forEach((key) => {
-        this.state.set(key, stateContainer[key])
-      })
+      this.state = Object.assign({}, stateContainer)
+      // this.state.replace(stateContainer)
+      // Object.keys(stateContainer).forEach((key) => {
+      //   this.state.set(key, stateContainer[key])
+      // })
+
+      // this.state.forEach((value, key) => {
+      //   if (!stateContainer.hasOwnProperty(key)) {
+      //     this.state.delete(key)
+      //   }
+      // })
     }
     if (stateContainer === this.stateContainer) {
       this.stateContainer = null
@@ -160,11 +169,11 @@ class Model {
         if (mappedPath) {
           mappedPath = mappedPath.replace(window.location.origin, '')
         }
-        this.history[action](mappedPath, Object.assign(this.state.toJSON(), _state))
+        this.history[action](mappedPath, Object.assign({}, this.state, _state))
       }
       else {
         if (_state) {
-          this.___setState(Object.assign(this.state.toJSON(), _state))
+          this.___setState(Object.assign({}, this.state, _state))
         }
         else {
           this.reload(mappedPath)
@@ -272,7 +281,7 @@ class Model {
       const createHistory = require('history').createBrowserHistory
 
       this.history = createHistory()
-      this.history.listen(action((location) => {
+      this.history.listen(action((location, historyType) => {
         const query = queryString.parse(location.search)
 
         this.injectionRegister.clear()
@@ -282,6 +291,10 @@ class Model {
         this.status = 'resolving'
 
         this.path = this.reverseMatchIfAny(location.pathname)
+
+        console.log(historyType)
+        console.log(JSON.stringify(location.state, null ,2))
+        this.isPOP = historyType === 'POP'
 
         if (this.prevPath === this.path) {
           this.___setState(location.state)
