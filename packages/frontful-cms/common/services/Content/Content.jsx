@@ -16,13 +16,13 @@ import React from 'react'
 class Content extends React.Component {
   render() {
     const {style} = this.props
-    return (
+    return false ? (
       <ContentComponent>
         <div className={style.css('content')}>
           <Heading accent title="CMS content" />
         </div>
       </ContentComponent>
-    )
+    ) : null
   }
 }
 
