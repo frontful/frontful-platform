@@ -292,8 +292,8 @@ class Model {
 
         this.path = this.reverseMatchIfAny(location.pathname)
 
-        console.log(historyType)
-        console.log(JSON.stringify(location.state, null ,2))
+        // console.log(historyType)
+        // console.log(JSON.stringify(location.state, null ,2))
         this.isPOP = historyType === 'POP'
 
         if (this.prevPath === this.path) {
