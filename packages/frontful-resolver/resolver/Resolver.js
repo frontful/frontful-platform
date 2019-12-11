@@ -50,6 +50,9 @@ export class Resolver {
   getResolveFunction(resolvers) {
     const resolve = this.resolve.bind(this, false, resolvers)
     resolve.untracked = this.resolve.bind(this, true, resolvers)
+    resolve.onDispose = (onDispose) => {
+      this.onDispose = onDispose
+    }
     resolve.value = (value) => ({__value__: value})
     return resolve
   }
@@ -342,6 +345,13 @@ export class Resolver {
     if (!this.isDisposed) {
       this.disposeResolversTree(this.resolversTree, true)
       if (full) {
+        if(this.onDispose) {
+          this.onDispose({
+            ...this.definerObject,
+            ...this.props,
+            getRequisites: this.getRequisites,
+          })
+        }
         this.isResolver = null
         this.Component = null
         this.props = null
