@@ -45,13 +45,18 @@ module.exports = function provider(options) {
     optimization: {
       splitChunks: {
         cacheGroups: {
+          // vendor: {
+          //   chunks: 'initial',
+          //   name: 'vendor',
+          //   enforce: true,
+          //   test(module) {
+          //     return module.context && module.context.indexOf('node_modules') >= 0
+          //   },
+          // },
           vendor: {
-            chunks: 'initial',
+            test: /[\\/]node_modules[\\/].*\.js$/,
             name: 'vendor',
-            enforce: true,
-            test(module) {
-              return module.context && module.context.indexOf('node_modules') >= 0
-            },
+            chunks: 'all',
           },
           // styles: {
           //   name: 'main',

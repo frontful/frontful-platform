@@ -1,5 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 const findWorkspaceRoot = require('find-yarn-workspace-root')
 // const hash = require('../utils/hash')
 const path = require('path')
@@ -46,21 +47,33 @@ module.exports = function provider(options) {
     optimization: {
       splitChunks: {
         cacheGroups: {
+          // vendor: {
+          //   chunks: 'initial',
+          //   name: 'vendor',
+          //   enforce: false,
+          //   test(module) {
+          //     return module.context && module.context.indexOf('node_modules') >= 0
+          //   },
+          // },
           vendor: {
-            chunks: 'initial',
+            test: /[\\/]node_modules[\\/].*\.js$/,
             name: 'vendor',
-            enforce: true,
-            test(module) {
-              return module.context && module.context.indexOf('node_modules') >= 0
-            },
+            chunks: 'all',
           },
         },
       },
       minimizer: [
-        new UglifyJSPlugin({
-          uglifyOptions: {},
+        new TerserPlugin({
           sourceMap: options.sourceMaps,
+          parallel: true,
+          // terserOptions: {
+          //   ecma: 6,
+          // },
         }),
+        // new UglifyJSPlugin({
+        //   uglifyOptions: {},
+        //   sourceMap: options.sourceMaps,
+        // }),
       ],
     },
     plugins: [
